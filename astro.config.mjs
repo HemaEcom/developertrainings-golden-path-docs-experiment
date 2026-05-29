@@ -9,6 +9,9 @@ export default defineConfig({
     starlight({
       title: 'Frontend Golden Path',
       description: 'The recommended way to build frontend MFEs at HEMA',
+      logo: {
+        src: './public/hema-logo.svg',
+      },
       customCss: ['./src/styles/hema-theme.css'],
       social: [
         {
