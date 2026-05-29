@@ -1,7 +1,7 @@
-# Hema100 Composable Frontend Golden Path
-
-> Source: [Confluence COCO Space - Page ID 6290538583](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6290538583)
-> Version: 18 | Last synced: 2026-05-28
+---
+title: Hema100 Composable Frontend Golden Path
+description: The recommended way to build frontend MFEs at HEMA
+---
 
 ---
 

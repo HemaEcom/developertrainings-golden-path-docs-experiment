@@ -1,7 +1,7 @@
-# Golden Path Tutorial - Create a Frontend Service
-
-> Source: [Confluence COCO Space - Page ID 6316654631](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6316654631)
-> Version: 27 | Last synced: 2026-05-28
+---
+title: "Tutorial: Create a Frontend Service"
+description: Step-by-step guide to creating a new MFE following the Golden Path
+---
 
 ---
 
