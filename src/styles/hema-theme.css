@@ -1,9 +1,12 @@
 /* HEMA Brand Theme for Starlight
  * Colors and spacing derived from @hema/hds-tokens
  * Font: HurmeHEMA from @hema/hds-assets
+ *
+ * Starlight uses CSS @layer, so custom overrides must also be in the
+ * starlight.base layer to take effect after Starlight's defaults.
  */
 
-/* ─── Font Faces ──────────────────────────────────────────────────────────── */
+/* ─── Font Faces (outside layers — always applies) ────────────────────────── */
 
 @font-face {
   font-family: 'HurmeHEMA';
@@ -35,59 +38,51 @@
   font-display: swap;
 }
 
-/* ─── Light Mode (default) ────────────────────────────────────────────────── */
+/* ─── Theme Overrides (inside Starlight's base layer) ─────────────────────── */
 
-:root {
-  /* Typography */
-  --sl-font: 'HurmeHEMA', system-ui, -apple-system, sans-serif;
-  --sl-font-system-mono: ui-monospace, 'SF Mono', monospace;
+@layer starlight.base {
+  :root,
+  ::backdrop {
+    /* Typography */
+    --sl-font: 'HurmeHEMA', system-ui, -apple-system, sans-serif;
+    --sl-font-system-mono: ui-monospace, 'SF Mono', monospace;
 
-  /* Accent colors — using HEMA blue */
-  --sl-color-accent-low: #d9e9ff;      /* blue.01 */
-  --sl-color-accent: #0065ec;          /* blue.03 */
-  --sl-color-accent-high: #183E8E;     /* blue.04 */
+    /* Accent colors — using HEMA blue */
+    --sl-color-accent-low: #d9e9ff;      /* blue.01 */
+    --sl-color-accent: #0065ec;          /* blue.03 */
+    --sl-color-accent-high: #183E8E;     /* blue.04 */
 
-  /* Gray scale — mapped from HEMA shade tokens */
-  --sl-color-white: #ffffff;            /* shade.01 */
-  --sl-color-gray-1: #f5f5f5;          /* shade.02 */
-  --sl-color-gray-2: #efefef;          /* shade.03 */
-  --sl-color-gray-3: #dfdfdf;          /* shade.04 */
-  --sl-color-gray-4: #9d9d9d;          /* shade.06 */
-  --sl-color-gray-5: #5c5c5c;          /* shade.08 */
-  --sl-color-gray-6: #333333;          /* shade.10 */
-  --sl-color-black: #1b1b1b;           /* shade.12 */
+    /* Gray scale — mapped from HEMA shade tokens */
+    --sl-color-white: #ffffff;            /* shade.01 */
+    --sl-color-gray-1: #f5f5f5;          /* shade.02 */
+    --sl-color-gray-2: #efefef;          /* shade.03 */
+    --sl-color-gray-3: #dfdfdf;          /* shade.04 */
+    --sl-color-gray-4: #9d9d9d;          /* shade.06 */
+    --sl-color-gray-5: #5c5c5c;          /* shade.08 */
+    --sl-color-gray-6: #333333;          /* shade.10 */
+    --sl-color-black: #1b1b1b;           /* shade.12 */
 
-  /* Text */
-  --sl-color-text: #1b1b1b;            /* light.text.primary = shade.12 */
-  --sl-color-text-accent: #0065ec;     /* light.text.informative = blue.03 */
-}
+    /* Text */
+    --sl-color-text: var(--sl-color-gray-2);
+    --sl-color-text-accent: var(--sl-color-accent-high);
+  }
 
-/* ─── Dark Mode ───────────────────────────────────────────────────────────── */
+  /* Light mode overrides */
+  :root[data-theme='light'],
+  [data-theme='light'] ::backdrop {
+    --sl-color-accent-low: #d9e9ff;      /* blue.01 */
+    --sl-color-accent: #0065ec;          /* blue.03 */
+    --sl-color-accent-high: #183E8E;     /* blue.04 */
 
-:root[data-theme='dark'] {
-  /* Accent colors — inverted for dark backgrounds */
-  --sl-color-accent-low: #183E8E;      /* blue.04 */
-  --sl-color-accent: #569fff;          /* blue.02 */
-  --sl-color-accent-high: #d9e9ff;     /* blue.01 */
+    --sl-color-white: #1b1b1b;           /* shade.12 (inverted for light) */
+    --sl-color-gray-1: #333333;          /* shade.10 */
+    --sl-color-gray-2: #5c5c5c;          /* shade.08 */
+    --sl-color-gray-3: #767676;          /* shade.07 */
+    --sl-color-gray-4: #9d9d9d;          /* shade.06 */
+    --sl-color-gray-5: #dfdfdf;          /* shade.04 */
+    --sl-color-gray-6: #f5f5f5;          /* shade.02 */
+    --sl-color-black: #ffffff;            /* shade.01 */
 
-  /* Gray scale — inverted from HEMA dark theme */
-  --sl-color-white: #1b1b1b;           /* shade.12 */
-  --sl-color-gray-1: #272727;          /* shade.11 */
-  --sl-color-gray-2: #333333;          /* shade.10 */
-  --sl-color-gray-3: #444444;          /* shade.09 */
-  --sl-color-gray-4: #767676;          /* shade.07 */
-  --sl-color-gray-5: #bfbfbf;          /* shade.05 */
-  --sl-color-gray-6: #efefef;          /* shade.03 */
-  --sl-color-black: #ffffff;            /* shade.01 */
-
-  /* Text */
-  --sl-color-text: #ffffff;             /* dark.text.primary = shade.01 */
-  --sl-color-text-accent: #569fff;     /* dark.text.informative = blue.02 */
-}
-
-/* ─── Additional Overrides ────────────────────────────────────────────────── */
-
-:root {
-  /* Border radius — from HDS radius-02 (8px) */
-  --sl-border-radius: 8px;
+    --sl-color-text-accent: var(--sl-color-accent);
+  }
 }
