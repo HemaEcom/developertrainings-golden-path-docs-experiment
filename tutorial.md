@@ -37,7 +37,7 @@ Before starting, ensure you have:
 
 - **SSO Access:** Active HEMA SSO account with appropriate permissions
 - **AWS CLI:** Configured with HEMA credentials (via SSO)
-- **Node.js**: Version 18 or 20 installed
+- **Node.js**: Version 22 or later installed
 - **Git:** Configured with your HEMA GitHub access
 - **Service Catalog Access**: Access to https://servicecatalog.ui.hema.digital
 - **Service Name Approval**: Your service name approved by the platform team
@@ -72,7 +72,7 @@ your-service-name/
 │   ├── pipeline/           # CI/CD pipeline stack
 │   └── runtime/            # Runtime environment stack
 ├── docs/                   # Service documentation
-├── your-app/               # Next.js application (to be created)
+├── src/                    # Next.js application (to be created)
 ├── cdk.json                # CDK configuration
 ├── package.json            # Root package.json for CDK
 ├── tsconfig.json           # TypeScript config for CDK
@@ -175,11 +175,11 @@ Navigate to [CodePipeline Console](https://eu-central-1.console.aws.amazon.com/c
 
 ### Scaffold Next.js Application
 
-Create a Next.js application inside your project in the `app/` directory:
+Create a Next.js application inside your project in the `src/` directory:
 
 ```bash
 # From project root
-npx create-next-app@latest app --typescript --tailwind --app --no-src-dir
+npx create-next-app@latest src --typescript --tailwind --app --no-src-dir
 ```
 
 **Answer the prompts:**
@@ -198,7 +198,7 @@ your-service-name/
 ├── bin/                    # CDK app entry points
 ├── lib/                    # CDK infrastructure code
 ├── docs/                   # Service documentation
-├── app/                    # Next.js application
+├── src/                    # Next.js application
 │   ├── app/                # Next.js App Router
 │   ├── components/         # React components
 │   ├── services/           # API services
@@ -207,6 +207,7 @@ your-service-name/
 │   ├── types/              # TypeScript types
 │   ├── locale-messages/    # i18n translations
 │   ├── public/             # Static assets
+│   ├── Dockerfile          # Docker build for ECS deployment
 │   ├── package.json        # App dependencies
 │   ├── next.config.ts      # Next.js configuration
 │   ├── tailwind.config.ts  # Tailwind configuration
@@ -220,28 +221,78 @@ your-service-name/
 
 ## Part 4: Integrate & Deploy Next.js Infrastructure Stack
 
-As a practical reference, the current CDK implementation in the **omni-web-content** repository can be used as inspiration and starting point. It already follows this architecture and can help accelerate the setup of new microfrontend services while keeping alignment with the defined structure.
+This part covers the CDK infrastructure, Docker build, gateway registration, and multi-zone configuration needed to deploy your Next.js app to production.
 
+**Detailed guides:**
+
+| Topic | Guide |
+|-------|-------|
+| CDK Infrastructure (ECS + ALB + Pipeline) | [sections/infrastructure/cdk-infrastructure.md](sections/infrastructure/cdk-infrastructure.md) |
+| Docker Standalone Build | [sections/infrastructure/docker-standalone.md](sections/infrastructure/docker-standalone.md) |
+| Gateway Registration | [sections/gateway/gateway-registration.md](sections/gateway/gateway-registration.md) |
+| Multi-Zone next.config.ts | [sections/gateway/multi-zone-config.md](sections/gateway/multi-zone-config.md) |
+| Environment Configuration | [sections/onboarding/environment-configuration.md](sections/onboarding/environment-configuration.md) |
+
+**Summary of what you need:**
+
+1. **Configure `next.config.ts`** — Set `output: 'standalone'`, configure `assetPrefix` and zone config
+2. **Create `Dockerfile`** — Multi-stage build using standalone output
+3. **Set up CDK runtime stack** — ECS Fargate + ALB + CloudFront VPC origin
+4. **Configure gateway registration** — Define routes in `gateway-routes-config.json`
+5. **Set up environment variables** — Configure Secrets Manager and SSM parameters
+
+As a practical reference, the current CDK implementation in the **omni-web-content** repository follows this architecture:
 - https://github.com/HemaEcom/omni-web-content-frontend
-
-<!-- TODO: Document the actual CDK constructs needed, environment variables, and configuration steps -->
 
 ---
 
 ## Part 5: Integrate HEMA Platform Capabilities
 
-### Integrate Tompouce HDS
+This part covers the shared libraries and platform capabilities that every MFE integrates.
 
-[Instructions](https://hema-design-system-dev.enterprise-dev-libraries.ui.hema.digital/?path=/docs/react-installation--docs)
+**Detailed guides:**
 
-<!-- TODO: Add step-by-step HDS integration guide -->
+| Topic | Guide |
+|-------|-------|
+| Web Shell Integration (Layout, Analytics, APIs) | [sections/libraries/web-shell-integration.md](sections/libraries/web-shell-integration.md) |
+| HDS / Tompouce Design System | [sections/libraries/hds-integration.md](sections/libraries/hds-integration.md) |
+| Internationalization (i18n) | [sections/onboarding/i18n-setup.md](sections/onboarding/i18n-setup.md) |
+| Testing Strategy (Vitest + Playwright BDD) | [sections/ci-cd/testing-strategy.md](sections/ci-cd/testing-strategy.md) |
+| Butler & Feature Sandboxes | [sections/ci-cd/butler-feature-sandboxes.md](sections/ci-cd/butler-feature-sandboxes.md) |
+
+**Integration order:**
+
+1. **HDS** — Install design system packages, configure Tailwind CSS v4
+2. **Web Shell** — Wrap your app with Shell for header, footer, analytics
+3. **i18n** — Set up next-intl with multi-domain routing
+4. **Testing** — Configure Vitest for unit tests, Playwright BDD for E2E
+5. **Butler** — Write `buildspec-ci.yaml` for feature sandbox deployments
+
+### Quick Start: Tompouce HDS
+
+```bash
+cd src/
+npm install @hema/hds-components-react @hema/hds-assets @hema/hds-tailwindcss-presets
+npm install -D tailwindcss@4 @tailwindcss/postcss postcss
+```
+
+See the [full HDS integration guide](sections/libraries/hds-integration.md) for PostCSS config, globals.css setup, and component usage.
 
 ---
 
 ## What's Next
 
-- Install **web-shell** library (Layout and global contexts & providers)
-- How to deploy test preview sandboxes
-- Release to pre-prod and production
+These guides complete the platform knowledge needed to operate your MFE in production:
 
-<!-- TODO: These sections need to be written -->
+| Topic | Guide |
+|-------|-------|
+| Monitoring & Observability | [sections/monitoring/observability.md](sections/monitoring/observability.md) |
+| Sanity CMS Integration | [sections/cms/overview.md](sections/cms/overview.md) |
+| Performance & Caching | [sections/performance/caching-cdn.md](sections/performance/caching-cdn.md) |
+| Security (WAF, Headers) | [sections/security/security-headers-waf.md](sections/security/security-headers-waf.md) |
+| Data APIs (PODS, Kong Auth) | [sections/data-apis/overview.md](sections/data-apis/overview.md) |
+| Session Sharing (SFCC ↔ Next.js) | [sections/data-apis/session-sharing.md](sections/data-apis/session-sharing.md) |
+| Server Actions vs API Routes | [sections/onboarding/server-actions-vs-api-routes.md](sections/onboarding/server-actions-vs-api-routes.md) |
+| Environments Map | [sections/environments/environment-map.md](sections/environments/environment-map.md) |
+| Federated Sitemaps | [sections/gateway/federated-sitemaps.md](sections/gateway/federated-sitemaps.md) |
+| Quick Reference Card | [sections/onboarding/quick-reference-card.md](sections/onboarding/quick-reference-card.md) |
