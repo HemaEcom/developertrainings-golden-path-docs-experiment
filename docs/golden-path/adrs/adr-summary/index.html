@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Architecture Decision Records — Summary & Golden Path Alignment | Frontend Golden Path</title><link rel="canonical" href="https://hemaecom.github.io/developertrainings-golden-path-docs-experiment/golden-path/adrs/adr-summary/"/><link rel="sitemap" href="/developertrainings-golden-path-docs-experiment/sitemap-index.xml"/><link rel="shortcut icon" href="/developertrainings-golden-path-docs-experiment/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.18.2"/><meta name="generator" content="Starlight v0.34.8"/><meta property="og:title" content="Architecture Decision Records — Summary &#38; Golden Path Alignment"/><meta property="og:type" content="article"/><meta property="og:url" content="https://hemaecom.github.io/developertrainings-golden-path-docs-experiment/golden-path/adrs/adr-summary/"/><meta property="og:locale" content="en"/><meta property="og:description" content="The recommended way to build frontend MFEs at HEMA"/><meta property="og:site_name" content="Frontend Golden Path"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="The recommended way to build frontend MFEs at HEMA"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/developertrainings-golden-path-docs-experiment/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/developertrainings-golden-path-docs-experiment/_astro/index.Dt3TDI_s.css"><script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-vrdttmbt"> <header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/developertrainings-golden-path-docs-experiment/" class="site-title sl-flex astro-m46x6ez3">  <span class="astro-m46x6ez3" translate="no"> Frontend Golden Path </span> </a>  </div> <div class="sl-flex print:hidden astro-kmkmnagf"> <site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/Search.astro_astro_type_script_index_0_lang.CXlTcth2.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <a href="https://github.com/HemaEcom/developertrainings-golden-path-docs-experiment" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt"> <div class="sidebar-content sl-flex astro-vrdttmbt"> <sl-sidebar-state-persist data-hash="1pnxyxp" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Overview</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Golden Path</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Tutorial</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Onboarding</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/environment-configuration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Environment Configuration</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/i18n-setup/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Internationalization (i18n)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/quick-reference-card/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Quick Reference Card — HEMA100 Frontend</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/server-actions-vs-api-routes/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Server Actions vs API Routes</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Infrastructure</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/infrastructure/cdk-infrastructure/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CDK Infrastructure Guide</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/infrastructure/docker-standalone/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Docker / Standalone Build Guide</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Gateway</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/gateway/federated-sitemaps/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Federated Sitemaps</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/gateway/gateway-registration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Gateway Registration Guide</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/gateway/multi-zone-config/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Multi-Zone Next.js Configuration</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Libraries</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/libraries/hds-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">HEMA Design System (HDS / Tompouce) Integration</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/libraries/web-shell-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Web Shell Integration Guide</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="5"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">CI/CD</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/ci-cd/butler-feature-sandboxes/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Butler &amp; Feature Sandbox Deployments</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/ci-cd/testing-strategy/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Testing Strategy</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="6"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">CMS</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/content-flow/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Content Flow &amp; Live Preview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/content-modeling/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Content Modeling — Sanity Schema Architecture</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/dam-sync/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">DAM Sync — Bynder Asset Synchronization</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/deployment/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CMS Deployment — Pipeline &amp; Environments</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/mfe-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MFE Integration — Consuming CMS Data in Next.js</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CMS Overview — Sanity Composable CMS</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="7"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Data &amp; APIs</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/kong-authentication/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Kong API Authentication</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Data APIs — Overview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/pods-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">PODS Integration — Product Data via GraphQL</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/session-sharing/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Session Sharing — SFCC &amp; Next.js Coexistence</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="8"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Environments</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/environments/environment-map/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Environments — Full Landscape Map</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="9"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Performance</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/performance/caching-cdn/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Performance — Caching, CDN &amp; Core Web Vitals</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="10"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Security</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/security/security-headers-waf/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Security — WAF, Headers &amp; Data Protection</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="11"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Monitoring</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/monitoring/observability/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Monitoring &amp; Observability</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="12"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">ADRs</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/adrs/adr-summary/" aria-current="page" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Architecture Decision Records — Summary &amp; Golden Path Alignment</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/HemaEcom/developertrainings-golden-path-docs-experiment" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script><script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script><div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><div class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></div><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#adr-index" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">ADR Index</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#gaps-identified-from-adr-review" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Gaps Identified from ADR Review</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#1-adr-0005-two-deployment-models-ecs-vs-opennext" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">1. ADR-0005: Two Deployment Models (ECS vs OpenNext)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#2-️-server-actions-vs-api-routes-adr-0012" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">2. ⚠️ Server Actions vs API Routes (ADR-0012)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#3-️-kong-api-authentication-adr-0015" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">3. ⚠️ Kong API Authentication (ADR-0015)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#4--federated-sitemap-architecture--now-covered" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">4. ✅ Federated Sitemap Architecture — NOW COVERED</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#5-️-pods-integration-pattern-adr-0008" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">5. ⚠️ PODS Integration Pattern (ADR-0008)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#6-️-visual-regression--accessibility-testing" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">6. ⚠️ Visual Regression &amp; Accessibility Testing</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-architectural-decisions-that-are-well-covered" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key Architectural Decisions That ARE Well-Covered</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#recommended-new-sections" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Recommended New Sections</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#adr-process-reference" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">ADR Process Reference</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#creating-a-new-adr" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Creating a New ADR</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#adr-statuses" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">ADR Statuses</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#where-adrs-live" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Where ADRs Live</span> </a>  </li> </ul>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#adr-index" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">ADR Index</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#gaps-identified-from-adr-review" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Gaps Identified from ADR Review</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#1-adr-0005-two-deployment-models-ecs-vs-opennext" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">1. ADR-0005: Two Deployment Models (ECS vs OpenNext)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#2-️-server-actions-vs-api-routes-adr-0012" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">2. ⚠️ Server Actions vs API Routes (ADR-0012)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#3-️-kong-api-authentication-adr-0015" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">3. ⚠️ Kong API Authentication (ADR-0015)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#4--federated-sitemap-architecture--now-covered" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">4. ✅ Federated Sitemap Architecture — NOW COVERED</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#5-️-pods-integration-pattern-adr-0008" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">5. ⚠️ PODS Integration Pattern (ADR-0008)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#6-️-visual-regression--accessibility-testing" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">6. ⚠️ Visual Regression &amp; Accessibility Testing</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-architectural-decisions-that-are-well-covered" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key Architectural Decisions That ARE Well-Covered</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#recommended-new-sections" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Recommended New Sections</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#adr-process-reference" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">ADR Process Reference</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#creating-a-new-adr" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Creating a New ADR</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#adr-statuses" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">ADR Statuses</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#where-adrs-live" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Where ADRs Live</span> </a>  </li> </ul>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Architecture Decision Records — Summary &amp; Golden Path Alignment</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <blockquote>
+<p><strong>Source</strong>: <code dir="auto">ezex-handbook/confluence/hema-architecture/adrs/</code>
+<strong>Total ADRs</strong>: 20 numbered + ~10 unnumbered drafts</p>
+</blockquote>
+<div class="sl-heading-wrapper level-h2"><h2 id="adr-index">ADR Index</h2><a class="sl-anchor-link" href="#adr-index"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “ADR Index”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>#</th><th>Title</th><th>Status</th><th>Golden Path Coverage</th></tr></thead><tbody><tr><td>0001</td><td>Build a header/footer component</td><td>DRAFT</td><td>✅ Covered in <code dir="auto">web-shell-integration.md</code></td></tr><tr><td>0002</td><td>Using Sanity CMS for site configuration</td><td>IN PROGRESS</td><td>✅ Covered in <code dir="auto">cms/content-modeling.md</code> (Shell Configuration)</td></tr><tr><td>0003</td><td>Teams SHOULD use Next.js</td><td>DECIDED</td><td>✅ Covered in tutorial (Part 3)</td></tr><tr><td>0004</td><td>Session sharing between SFCC and Next.js</td><td>IN PROGRESS</td><td>✅ Covered in <code dir="auto">data-apis/session-sharing.md</code></td></tr><tr><td>0005</td><td>Use OpenNext for account pages</td><td>DECIDED</td><td>✅ Both approaches valid — see below</td></tr><tr><td>0006</td><td>Interactive behavior in React component library</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">hds-integration.md</code></td></tr><tr><td>0007</td><td>Guidelines on client components in design system</td><td>DECIDED</td><td>✅ Implicitly covered</td></tr><tr><td>0008</td><td>Use PODS to get product data</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">data-apis/overview.md</code> + <code dir="auto">data-apis/pods-integration.md</code></td></tr><tr><td>0009</td><td>Use Sanity directly for editorial content</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">cms/mfe-integration.md</code></td></tr><tr><td>0010</td><td>CMS NOT to consume Bynder directly</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">cms/dam-sync.md</code></td></tr><tr><td>0011</td><td>Use Newsletter API via Kong</td><td>DECIDED</td><td>⚠️ Not in Golden Path — domain-specific</td></tr><tr><td>0012</td><td>Server actions vs API routes</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">onboarding/server-actions-vs-api-routes.md</code></td></tr><tr><td>0013</td><td>Use CloudFront Functions for gateway router</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">gateway/gateway-registration.md</code></td></tr><tr><td>0014</td><td>CI/CD strategy</td><td>IN PROGRESS</td><td>✅ Covered in <code dir="auto">ci-cd/</code> section</td></tr><tr><td>0015</td><td>Auth with API management (Kong)</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">data-apis/kong-authentication.md</code></td></tr><tr><td>0016</td><td>Multi-zone support</td><td>IN PROGRESS</td><td>✅ Covered in <code dir="auto">gateway/multi-zone-config.md</code></td></tr><tr><td>0017</td><td>URL namespace structure</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">gateway/multi-zone-config.md</code></td></tr><tr><td>0018</td><td>Release flow for Tompouce (HDS)</td><td>DECIDED</td><td>✅ Covered in <code dir="auto">hds-integration.md</code></td></tr><tr><td>0019</td><td>Analytics integration</td><td>DONE</td><td>✅ Covered in <code dir="auto">web-shell-integration.md</code> (analytics package)</td></tr><tr><td>0020</td><td>MFE protection at edge</td><td>—</td><td>✅ Covered in <code dir="auto">security/security-headers-waf.md</code></td></tr><tr><td>—</td><td>Federated sitemap architecture</td><td>—</td><td>✅ Covered in <code dir="auto">gateway/federated-sitemaps.md</code></td></tr><tr><td>—</td><td>Consistent logging in MFEs</td><td>—</td><td>✅ Covered in <code dir="auto">monitoring/observability.md</code></td></tr><tr><td>—</td><td>CloudFront flat rate pricing</td><td>—</td><td>N/A (cost decision, not dev-facing)</td></tr><tr><td>—</td><td>Bazaarvoice integration</td><td>—</td><td>N/A (domain-specific)</td></tr><tr><td>—</td><td>Domain-based locale routing</td><td>—</td><td>✅ Covered in <code dir="auto">i18n-setup.md</code></td></tr><tr><td>—</td><td>Visual regression testing for Tompouce</td><td>—</td><td>⚠️ Not in Golden Path</td></tr><tr><td>—</td><td>Accessibility testing for Tompouce</td><td>—</td><td>⚠️ Not in Golden Path</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="gaps-identified-from-adr-review">Gaps Identified from ADR Review</h2><a class="sl-anchor-link" href="#gaps-identified-from-adr-review"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Gaps Identified from ADR Review”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="1-adr-0005-two-deployment-models-ecs-vs-opennext">1. ADR-0005: Two Deployment Models (ECS vs OpenNext)</h3><a class="sl-anchor-link" href="#1-adr-0005-two-deployment-models-ecs-vs-opennext"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “1. ADR-0005: Two Deployment Models (ECS vs OpenNext)”</span></a></div>
+<p><strong>ADR-0005</strong> decided to use <strong>OpenNext</strong> (Lambda-based serverless) for account pages, while noting that CoFi uses ECS for content pages. Both are valid deployment approaches on the Golden Path.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Model</th><th>Best For</th><th>Trade-offs</th></tr></thead><tbody><tr><td><strong>ECS Fargate + Docker</strong></td><td>High-traffic MFEs, complex SSR, long-running requests, consistent latency</td><td>Higher baseline cost, more operational control</td></tr><tr><td><strong>OpenNext (Lambda)</strong></td><td>Small/medium MFEs, bursty traffic, cost-sensitive services, fast sandbox creation</td><td>Cold starts (mitigated by warmer), Lambda timeout limits, pay-per-request</td></tr></tbody></table>
+<p><strong>Current usage</strong>:</p>
+<ul>
+<li><code dir="auto">omni-web-content-frontend</code> → ECS (high traffic, content pages)</li>
+<li><code dir="auto">omni-web-catalog-pdp</code> → ECS (high traffic, product pages)</li>
+<li><code dir="auto">omni-web-myaccount-frontend</code> → OpenNext/Lambda (lower traffic, account pages)</li>
+</ul>
+<p><strong>When to choose which</strong>:</p>
+<ul>
+<li>Choose <strong>ECS</strong> if your MFE has sustained high traffic, needs consistent sub-100ms latency, or has complex server-side processing</li>
+<li>Choose <strong>OpenNext</strong> if your MFE has bursty/low traffic, benefits from pay-per-request pricing, or needs the fastest possible sandbox creation/deletion</li>
+</ul>
+<p>Both models integrate with Butler, CDK, and the gateway registration system. The Golden Path infrastructure guide (<code dir="auto">cdk-infrastructure.md</code>) documents the ECS pattern in detail. OpenNext uses SST constructs with a similar CDK integration pattern.</p>
+<p><strong>Action needed</strong>: Document the OpenNext deployment pattern as an alternative in the infrastructure section.</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="2-️-server-actions-vs-api-routes-adr-0012">2. ⚠️ Server Actions vs API Routes (ADR-0012)</h3><a class="sl-anchor-link" href="#2-️-server-actions-vs-api-routes-adr-0012"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “2. ⚠️ Server Actions vs API Routes (ADR-0012)”</span></a></div>
+<p><strong>Decision</strong>: Use server actions by default, unless the API is meant to be accessed by a different application.</p>
+<p><strong>Current state in repos</strong>:</p>
+<ul>
+<li>Content frontend: Uses API routes for draft mode (<code dir="auto">/api/draft-mode/enable</code>), health checks (<code dir="auto">/api/health</code>), sitemaps</li>
+<li>PDP: Uses server actions for mutations (add to cart, newsletter), API routes for health</li>
+</ul>
+<p><strong>Missing from Golden Path</strong>: When to use server actions vs API routes. This is a practical decision every developer faces.</p>
+<p><strong>Recommendation</strong>: Add a brief section to the Quick Reference Card or a new how-to guide.</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="3-️-kong-api-authentication-adr-0015">3. ⚠️ Kong API Authentication (ADR-0015)</h3><a class="sl-anchor-link" href="#3-️-kong-api-authentication-adr-0015"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “3. ⚠️ Kong API Authentication (ADR-0015)”</span></a></div>
+<p><strong>Decision</strong>: Implement a separate secret where a fresh authentication token is stored and rotated independently. Service token is never loaded to the app directly.</p>
+<p><strong>Current state in repos</strong>:</p>
+<ul>
+<li>PDP uses <code dir="auto">KongAuthenticator</code> class that fetches credentials from <code dir="auto">AUTH_SECRET</code> env var</li>
+<li>Token rotation handled at runtime (5-hour lifespan)</li>
+<li>Credentials stored in Secrets Manager, injected as ECS secrets</li>
+</ul>
+<p><strong>Missing from Golden Path</strong>: How to authenticate with Kong-managed APIs. Any MFE that needs to call backend services (PODS, Newsletter, Commerce) needs this pattern.</p>
+<p><strong>Recommendation</strong>: Create <code dir="auto">sections/data-apis/kong-authentication.md</code></p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="4--federated-sitemap-architecture--now-covered">4. ✅ Federated Sitemap Architecture — NOW COVERED</h3><a class="sl-anchor-link" href="#4--federated-sitemap-architecture--now-covered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “4. ✅ Federated Sitemap Architecture — NOW COVERED”</span></a></div>
+<p>Documented in <code dir="auto">sections/gateway/federated-sitemaps.md</code>. Covers the gateway-owned sitemap index, zone replacement keys, MFE requirements, and the SFCC migration sequence.</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="5-️-pods-integration-pattern-adr-0008">5. ⚠️ PODS Integration Pattern (ADR-0008)</h3><a class="sl-anchor-link" href="#5-️-pods-integration-pattern-adr-0008"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “5. ⚠️ PODS Integration Pattern (ADR-0008)”</span></a></div>
+<p><strong>Decision</strong>: Use PODS GraphQL API for product data (pricing, promotions, characteristics).</p>
+<p><strong>Current state in repos</strong>:</p>
+<ul>
+<li>PDP uses Apollo Client with <code dir="auto">@apollo/client-integration-nextjs</code></li>
+<li>Kong OAuth authentication for API access</li>
+<li>Store IDs per country region (NL: 0755, DE: 0751, FR: 0759, BE: 0756)</li>
+</ul>
+<p><strong>Missing from Golden Path</strong>: How to integrate with PODS. Any MFE rendering product data needs this.</p>
+<p><strong>Recommendation</strong>: Create <code dir="auto">sections/data-apis/pods-integration.md</code></p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="6-️-visual-regression--accessibility-testing">6. ⚠️ Visual Regression &#x26; Accessibility Testing</h3><a class="sl-anchor-link" href="#6-️-visual-regression--accessibility-testing"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “6. ⚠️ Visual Regression &#x26; Accessibility Testing”</span></a></div>
+<p>Two ADRs discuss testing strategies for Tompouce (HDS) but these patterns aren’t documented for MFE teams:</p>
+<ul>
+<li>Visual regression testing strategy</li>
+<li>Automated accessibility testing strategy</li>
+</ul>
+<p><strong>Missing from Golden Path</strong>: Accessibility testing patterns for MFE teams (not just the design system).</p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="key-architectural-decisions-that-are-well-covered">Key Architectural Decisions That ARE Well-Covered</h2><a class="sl-anchor-link" href="#key-architectural-decisions-that-are-well-covered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Key Architectural Decisions That ARE Well-Covered”</span></a></div>
+<p>These ADRs are fully reflected in the Golden Path documentation:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Decision</th><th>Where Documented</th></tr></thead><tbody><tr><td>Next.js as standard framework</td><td>Tutorial Part 3</td></tr><tr><td>Shared header/footer via Web Shell</td><td><code dir="auto">libraries/web-shell-integration.md</code></td></tr><tr><td>Sanity for editorial content + config</td><td><code dir="auto">cms/</code> section (6 docs)</td></tr><tr><td>Bynder → Kafka → Sanity (not direct)</td><td><code dir="auto">cms/dam-sync.md</code></td></tr><tr><td>CloudFront Functions for routing</td><td><code dir="auto">gateway/gateway-registration.md</code></td></tr><tr><td>Multi-zone architecture</td><td><code dir="auto">gateway/multi-zone-config.md</code></td></tr><tr><td>URL namespace (<code dir="auto">_zones/</code>, <code dir="auto">_platform/</code>)</td><td><code dir="auto">gateway/multi-zone-config.md</code></td></tr><tr><td>Centralized analytics via shell</td><td><code dir="auto">libraries/web-shell-integration.md</code></td></tr><tr><td>Consistent logging (<code dir="auto">@hema/monitoring-logger</code>)</td><td><code dir="auto">monitoring/observability.md</code></td></tr><tr><td>MFE protection (WAF, VPC origins)</td><td><code dir="auto">security/security-headers-waf.md</code></td></tr><tr><td>Domain-based locale routing</td><td><code dir="auto">onboarding/i18n-setup.md</code></td></tr><tr><td>HDS release flow (manual + RC auto)</td><td><code dir="auto">libraries/hds-integration.md</code></td></tr><tr><td>Client components guidelines</td><td>Implicit in HDS docs</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="recommended-new-sections">Recommended New Sections</h2><a class="sl-anchor-link" href="#recommended-new-sections"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Recommended New Sections”</span></a></div>
+<p>Based on the ADR gap analysis, these sections would complete the Golden Path:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Priority</th><th>Section</th><th>Covers ADRs</th></tr></thead><tbody><tr><td><strong>High</strong></td><td><code dir="auto">sections/data-apis/kong-authentication.md</code></td><td>ADR-0015</td></tr><tr><td><strong>High</strong></td><td><code dir="auto">sections/data-apis/pods-integration.md</code></td><td>ADR-0008</td></tr><tr><td><strong>Medium</strong></td><td><code dir="auto">sections/onboarding/server-actions-vs-api-routes.md</code></td><td>ADR-0012</td></tr><tr><td><strong>Medium</strong></td><td><del><code dir="auto">sections/gateway/federated-sitemaps.md</code></del> ✅ Done</td><td>Federated sitemap ADR</td></tr><tr><td><strong>Low</strong></td><td><code dir="auto">sections/ci-cd/accessibility-testing.md</code></td><td>Accessibility ADR</td></tr><tr><td><strong>Low</strong></td><td>Note about ADR-0005 superseded by ECS</td><td>ADR-0005</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="adr-process-reference">ADR Process Reference</h2><a class="sl-anchor-link" href="#adr-process-reference"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “ADR Process Reference”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="creating-a-new-adr">Creating a New ADR</h3><a class="sl-anchor-link" href="#creating-a-new-adr"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Creating a New ADR”</span></a></div>
+<p>ADRs follow this template (from <code dir="auto">HEM100-ADR-templateadr.md</code>):</p>
+<div class="expressive-code"><link rel="stylesheet" href="/developertrainings-golden-path-docs-experiment/_astro/ec.v4551.css"><script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/ec.0vx5m.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="markdown"><code><div class="ec-line"><div class="code"><span style="--0:#82B1FF;--1:#3B61B0"># HEM100-ADR-XXXX: Title</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| Field | Value |</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">|-------|-------|</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| </span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#C5E478;--0fw:bold;--1:#3B61B0;--1fw:bold">ADR #</span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#D6DEEB;--1:#403F53"> | HEM100-ADR-XXXX |</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| </span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#C5E478;--0fw:bold;--1:#3B61B0;--1fw:bold">Status</span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#D6DEEB;--1:#403F53"> | Draft / In Progress / Decided / Superseded |</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| </span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#C5E478;--0fw:bold;--1:#3B61B0;--1fw:bold">Owner</span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#D6DEEB;--1:#403F53"> | Name |</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| </span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#C5E478;--0fw:bold;--1:#3B61B0;--1fw:bold">Contributors</span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#D6DEEB;--1:#403F53"> | Names |</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| </span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#C5E478;--0fw:bold;--1:#3B61B0;--1fw:bold">Problem</span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#D6DEEB;--1:#403F53"> | One-line problem statement |</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">| </span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#C5E478;--0fw:bold;--1:#3B61B0;--1fw:bold">Decision</span><span style="--0:#C5E478;--1:#3B61B0">**</span><span style="--0:#D6DEEB;--1:#403F53"> | One-paragraph decision summary |</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#82B1FF;--1:#3B61B0">## Problem</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">Describe the problem and its impact on HEMA.</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#82B1FF;--1:#3B61B0">## Analysis</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">Describe considered solutions with pros/cons.</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#82B1FF;--1:#3B61B0">## Decision</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">Describe the taken decision in detail.</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#82B1FF;--1:#3B61B0">## Consequences</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">Describe the consequences of the decision.</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#82B1FF;--1:#3B61B0">## References</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">Links to related documents.</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# HEM100-ADR-XXXX: Title| Field | Value ||-------|-------|| **ADR #** | HEM100-ADR-XXXX || **Status** | Draft / In Progress / Decided / Superseded || **Owner** | Name || **Contributors** | Names || **Problem** | One-line problem statement || **Decision** | One-paragraph decision summary |## ProblemDescribe the problem and its impact on HEMA.## AnalysisDescribe considered solutions with pros/cons.## DecisionDescribe the taken decision in detail.## ConsequencesDescribe the consequences of the decision.## ReferencesLinks to related documents."><div></div></button></div></figure></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="adr-statuses">ADR Statuses</h3><a class="sl-anchor-link" href="#adr-statuses"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “ADR Statuses”</span></a></div>
+<ul>
+<li><strong>Draft</strong> — Under discussion</li>
+<li><strong>In Progress</strong> — Being implemented</li>
+<li><strong>Decided</strong> — Approved and implemented</li>
+<li><strong>Superseded</strong> — Replaced by a newer decision</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="where-adrs-live">Where ADRs Live</h3><a class="sl-anchor-link" href="#where-adrs-live"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Where ADRs Live”</span></a></div>
+<ul>
+<li><strong>Confluence</strong>: COCO space → Architecture → ADRs (page ID: 5997002786)</li>
+<li><strong>Local sync</strong>: <code dir="auto">ezex-handbook/confluence/hema-architecture/adrs/</code></li>
+</ul> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/monitoring/observability/" rel="prev" class="astro-u2l5gyhi"> <svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg> <span class="astro-u2l5gyhi"> Previous <br class="astro-u2l5gyhi"> <span class="link-title astro-u2l5gyhi">Monitoring &amp; Observability</span> </span> </a>  </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
