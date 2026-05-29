@@ -4,6 +4,7 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   site: 'https://hemaecom.github.io',
   base: '/developertrainings-golden-path-docs-experiment',
+  outDir: './docs',
   integrations: [
     starlight({
       title: 'Frontend Golden Path',
