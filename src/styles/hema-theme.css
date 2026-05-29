@@ -1,12 +1,13 @@
 /* HEMA Brand Theme for Starlight
- * Colors and spacing derived from @hema/hds-tokens
- * Font: HurmeHEMA from @hema/hds-assets
+ * Design tokens extracted from Figma foundation file (7ZcJNM35WTwXXzk5xhsMDq)
+ * Token structure: Global → Alias (two-tier system)
+ * Font: HurmeHEMA (Regular 400, SemiBold 600, Bold 700)
  *
- * HEMA brand: monochrome (black/white) with red (#e81111) as accent.
- * Starlight uses CSS @layer, so overrides go in starlight.base layer.
+ * HEMA brand: monochrome (black/white) with red (#e81111) as primary accent.
+ * Secondary accents: aqua for info, green for success, yellow for warning.
  */
 
-/* ─── Font Faces (outside layers — always applies) ────────────────────────── */
+/* ─── Font Faces ──────────────────────────────────────────────────────────── */
 
 @font-face {
   font-family: 'HurmeHEMA';
@@ -38,50 +39,331 @@
   font-display: swap;
 }
 
-/* ─── Theme Overrides (inside Starlight's base layer) ─────────────────────── */
+/* ─── HEMA Design Tokens (CSS Custom Properties) ──────────────────────────── */
+
+:root {
+  /* Global Color Tokens */
+  --hema-shade-01: #ffffff;
+  --hema-shade-02: #f5f5f5;
+  --hema-shade-03: #efefef;
+  --hema-shade-04: #dfdfdf;
+  --hema-shade-05: #bfbfbf;
+  --hema-shade-06: #9d9d9d;
+  --hema-shade-07: #767676;
+  --hema-shade-08: #5e5e5e;
+  --hema-shade-09: #444444;
+  --hema-shade-10: #333333;
+  --hema-shade-11: #272727;
+  --hema-shade-12: #1b1b1b;
+  --hema-shade-13: #000000;
+
+  --hema-red-01: #facfcf;
+  --hema-red-02: #f47070;
+  --hema-red-03: #e81111;
+  --hema-red-04: #921c12;
+
+  --hema-aqua-01: #d4f5f5;
+  --hema-aqua-02: #7de0e0;
+  --hema-aqua-03: #00c8c8;
+  --hema-aqua-04: #009e9e;
+
+  --hema-blue-01: #d4e5f7;
+  --hema-blue-02: #7ab4e8;
+  --hema-blue-03: #2185d5;
+  --hema-blue-04: #1a5fa0;
+
+  --hema-green-01: #d4f0d4;
+  --hema-green-02: #6dd06d;
+  --hema-green-03: #2aad2a;
+  --hema-green-04: #1d7a1d;
+
+  --hema-yellow-01: #fff3cc;
+  --hema-yellow-02: #ffd54f;
+  --hema-yellow-03: #ffb300;
+  --hema-yellow-04: #c68400;
+
+  --hema-orange-01: #ffe0cc;
+  --hema-orange-02: #ff9e5c;
+  --hema-orange-03: #ff6600;
+  --hema-orange-04: #cc5200;
+
+  /* Global Spacing Tokens (4px base) */
+  --hema-space-0: 0px;
+  --hema-space-025: 1px;
+  --hema-space-050: 2px;
+  --hema-space-075: 3px;
+  --hema-space-100: 4px;
+  --hema-space-125: 5px;
+  --hema-space-150: 6px;
+  --hema-space-200: 8px;
+  --hema-space-250: 10px;
+  --hema-space-300: 12px;
+  --hema-space-400: 16px;
+  --hema-space-500: 20px;
+  --hema-space-600: 24px;
+  --hema-space-800: 32px;
+  --hema-space-1000: 40px;
+  --hema-space-1200: 48px;
+  --hema-space-1400: 56px;
+  --hema-space-1600: 64px;
+  --hema-space-1800: 72px;
+  --hema-space-2400: 96px;
+
+  /* Global Radius Tokens */
+  --hema-radius-0: 0px;
+  --hema-radius-050: 2px;
+  --hema-radius-075: 3px;
+  --hema-radius-100: 4px;
+  --hema-radius-150: 6px;
+  --hema-radius-200: 8px;
+  --hema-radius-300: 12px;
+  --hema-radius-full: 9999px;
+
+  /* Global Opacity Tokens */
+  --hema-opacity-low: 0.4;
+  --hema-opacity-medium: 0.6;
+  --hema-opacity-high: 0.8;
+
+  /* Global Elevation Tokens */
+  --hema-elevation-low: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --hema-elevation-medium: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --hema-elevation-high: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ─── Starlight Theme Overrides ───────────────────────────────────────────── */
 
 @layer starlight.base {
   :root,
   ::backdrop {
     /* Typography */
-    --sl-font: 'HurmeHEMA', system-ui, -apple-system, sans-serif;
-    --sl-font-system-mono: ui-monospace, 'SF Mono', monospace;
+    --sl-font: 'HurmeHEMA', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --sl-font-system-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, 'SF Mono', monospace;
 
-    /* Accent colors — HEMA red (#e81111) */
-    --sl-color-accent-low: #facfcf;      /* red.01 — light red background */
-    --sl-color-accent: #e81111;          /* red.03 — HEMA brand red */
-    --sl-color-accent-high: #921C12;     /* red.04 — dark red for contrast */
+    /* Accent — HEMA Red */
+    --sl-color-accent-low: var(--hema-red-01);
+    --sl-color-accent: var(--hema-red-03);
+    --sl-color-accent-high: var(--hema-red-04);
 
-    /* Gray scale — HEMA shade tokens (dark mode default in Starlight) */
-    --sl-color-white: #ffffff;            /* shade.01 */
-    --sl-color-gray-1: #f5f5f5;          /* shade.02 */
-    --sl-color-gray-2: #efefef;          /* shade.03 */
-    --sl-color-gray-3: #bfbfbf;          /* shade.05 */
-    --sl-color-gray-4: #767676;          /* shade.07 */
-    --sl-color-gray-5: #444444;          /* shade.09 */
-    --sl-color-gray-6: #272727;          /* shade.11 */
-    --sl-color-black: #1b1b1b;           /* shade.12 */
+    /* Gray scale — dark mode (Starlight default) */
+    --sl-color-white: var(--hema-shade-01);
+    --sl-color-gray-1: var(--hema-shade-02);
+    --sl-color-gray-2: var(--hema-shade-03);
+    --sl-color-gray-3: var(--hema-shade-05);
+    --sl-color-gray-4: var(--hema-shade-07);
+    --sl-color-gray-5: var(--hema-shade-09);
+    --sl-color-gray-6: var(--hema-shade-11);
+    --sl-color-black: var(--hema-shade-12);
+
+    /* Content width */
+    --sl-content-width: 75ch;
   }
 
-  /* Light mode overrides */
+  /* Light mode */
   :root[data-theme='light'],
   [data-theme='light'] ::backdrop {
-    /* Accent stays the same red */
-    --sl-color-accent-low: #facfcf;      /* red.01 */
-    --sl-color-accent: #e81111;          /* red.03 */
-    --sl-color-accent-high: #921C12;     /* red.04 */
+    --sl-color-accent-low: var(--hema-red-01);
+    --sl-color-accent: var(--hema-red-03);
+    --sl-color-accent-high: var(--hema-red-04);
 
-    /* Gray scale inverted for light backgrounds */
-    --sl-color-white: #1b1b1b;           /* shade.12 — darkest text */
-    --sl-color-gray-1: #272727;          /* shade.11 */
-    --sl-color-gray-2: #444444;          /* shade.09 */
-    --sl-color-gray-3: #767676;          /* shade.07 */
-    --sl-color-gray-4: #9d9d9d;          /* shade.06 */
-    --sl-color-gray-5: #dfdfdf;          /* shade.04 */
-    --sl-color-gray-6: #f5f5f5;          /* shade.02 */
-    --sl-color-gray-7: #ffffff;          /* shade.01 */
-    --sl-color-black: #ffffff;            /* shade.01 — lightest bg */
+    --sl-color-white: var(--hema-shade-12);
+    --sl-color-gray-1: var(--hema-shade-11);
+    --sl-color-gray-2: var(--hema-shade-09);
+    --sl-color-gray-3: var(--hema-shade-07);
+    --sl-color-gray-4: var(--hema-shade-06);
+    --sl-color-gray-5: var(--hema-shade-04);
+    --sl-color-gray-6: var(--hema-shade-02);
+    --sl-color-black: var(--hema-shade-01);
 
     --sl-color-text-accent: var(--sl-color-accent);
+  }
+
+  /* ─── Typography Refinements ──────────────────────────────────────────── */
+
+  :root {
+    --sl-text-h1: clamp(2rem, 4vw, 2.5rem);
+    --sl-text-h2: clamp(1.5rem, 3vw, 1.875rem);
+    --sl-text-h3: clamp(1.25rem, 2.5vw, 1.5rem);
+    --sl-text-h4: 1.125rem;
+    --sl-text-body: 1rem;
+    --sl-text-sm: 0.875rem;
+    --sl-text-xs: 0.75rem;
+    --sl-line-height: 1.6;
+    --sl-line-height-headings: 1.2;
+  }
+
+  /* Headings — bold weight, tight line-height */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: var(--sl-line-height-headings);
+    letter-spacing: -0.01em;
+  }
+
+  h1 { font-size: var(--sl-text-h1); }
+  h2 { font-size: var(--sl-text-h2); }
+  h3 { font-size: var(--sl-text-h3); }
+  h4 { font-size: var(--sl-text-h4); }
+
+  /* ─── Sidebar Styling ─────────────────────────────────────────────────── */
+
+  .sidebar-pane {
+    border-right: 1px solid var(--sl-color-gray-5);
+  }
+
+  nav.sidebar a[aria-current='page'],
+  nav.sidebar a[aria-current='true'] {
+    font-weight: 600;
+    color: var(--sl-color-accent);
+    border-inline-start-color: var(--sl-color-accent);
+  }
+
+  /* Sidebar group labels */
+  .sidebar-content .top-level > li > details > summary,
+  .sidebar-content .top-level > li > a {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--sl-text-xs);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Header / Site Title ─────────────────────────────────────────────── */
+
+  .site-title {
+    font-weight: 700;
+    font-size: 1.125rem;
+    gap: var(--hema-space-200);
+  }
+
+  header.header {
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+
+  /* ─── Content Area ────────────────────────────────────────────────────── */
+
+  .sl-markdown-content {
+    line-height: var(--sl-line-height);
+  }
+
+  /* Links — HEMA red with underline on hover */
+  .sl-markdown-content a:not(.card-grid a) {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  .sl-markdown-content a:not(.card-grid a):hover {
+    border-bottom-color: var(--sl-color-accent);
+  }
+
+  /* Code blocks — refined styling */
+  .expressive-code {
+    border-radius: var(--hema-radius-200);
+    box-shadow: var(--hema-elevation-low);
+  }
+
+  /* Inline code */
+  :not(pre) > code {
+    background: var(--sl-color-gray-6);
+    padding: 0.15em 0.4em;
+    border-radius: var(--hema-radius-100);
+    font-size: 0.875em;
+  }
+
+  /* ─── Cards & Asides ──────────────────────────────────────────────────── */
+
+  .card {
+    border-radius: var(--hema-radius-200);
+    border: 1px solid var(--sl-color-gray-5);
+    box-shadow: var(--hema-elevation-low);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--hema-elevation-medium);
+    transform: translateY(-1px);
+  }
+
+  /* Starlight asides (note, tip, caution, danger) */
+  .starlight-aside {
+    border-radius: var(--hema-radius-200);
+    padding: var(--hema-space-400) var(--hema-space-600);
+  }
+
+  .starlight-aside--note {
+    border-color: var(--hema-blue-03);
+  }
+
+  .starlight-aside--tip {
+    border-color: var(--hema-green-03);
+  }
+
+  .starlight-aside--caution {
+    border-color: var(--hema-yellow-03);
+  }
+
+  .starlight-aside--danger {
+    border-color: var(--hema-red-03);
+  }
+
+  /* ─── Table of Contents ───────────────────────────────────────────────── */
+
+  starlight-toc a[aria-current='true'] {
+    color: var(--sl-color-accent);
+    font-weight: 600;
+  }
+
+  /* ─── Footer / Pagination ─────────────────────────────────────────────── */
+
+  .pagination-links a {
+    border-radius: var(--hema-radius-200);
+    border: 1px solid var(--sl-color-gray-5);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .pagination-links a:hover {
+    border-color: var(--sl-color-accent);
+    box-shadow: var(--hema-elevation-low);
+  }
+
+  /* ─── Search ──────────────────────────────────────────────────────────── */
+
+  button[data-open-modal] {
+    border-radius: var(--hema-radius-full);
+    border: 1px solid var(--sl-color-gray-5);
+  }
+
+  /* ─── Scrollbar (subtle) ──────────────────────────────────────────────── */
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--sl-color-gray-4);
+    border-radius: var(--hema-radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--sl-color-gray-3);
+  }
+
+  /* ─── Selection ───────────────────────────────────────────────────────── */
+
+  ::selection {
+    background: var(--hema-red-01);
+    color: var(--hema-shade-12);
+  }
+
+  /* ─── Focus Styles (accessibility) ────────────────────────────────────── */
+
+  :focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+    border-radius: var(--hema-radius-050);
   }
 }
