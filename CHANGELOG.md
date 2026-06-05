@@ -12,6 +12,20 @@ Each entry follows:
 
 ---
 
+## [2026-06-02] - Reorder tutorial: Local Development before Capabilities and Deployment
+### What changed
+- Moved Local Development from step 6 (last) to step 5 (right after Next.js setup)
+- Moved Core Capabilities from step 4 to step 6
+- Deployment stays last at step 7
+- Renamed files: `05-local-dev.md`, `06-capabilities.md`, `07-deployment.md`
+### Why
+- A developer should run their app locally and verify the basic setup works before layering in HDS, Web Shell, CMS, etc.
+- Natural flow: scaffold → setup app → verify it runs → integrate capabilities → deploy
+### Sources used
+- Discussion about tutorial ordering priorities
+
+---
+
 ## [2026-06-02] - Tutorial cross-validation against repo implementations
 ### What changed
 - **next.config.ts**: Rewrote to show actual `deriveZoneConfig()` + `withNextIntl()` pattern (not plain `assetPrefix` string). Added production rewrite that strips zone prefix. Added `serverActions.allowedOrigins` with gateway dev domains.

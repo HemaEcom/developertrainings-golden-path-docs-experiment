@@ -1,8 +1,8 @@
 ---
-title: "6. Local Development"
+title: "5. Local Development"
 description: Run your MFE locally and the full capabilities summary
 sidebar:
-  order: 7
+  order: 5
 ---
 
 Almost there! Let's get your service running on your machine so you can develop comfortably. This is what your daily workflow will look like.

@@ -137,8 +137,7 @@
   --sl-color-gray-6: var(--hema-shade-11);
   --sl-color-black: var(--hema-shade-12);
 
-  --sl-content-width: 100ch;
-  --sl-content-pad-inline: 0;
+  --sl-content-width: 75ch;
   --sl-text-h1: clamp(2rem, 4vw, 2.5rem);
   --sl-text-h2: clamp(1.5rem, 3vw, 1.875rem);
   --sl-text-h3: clamp(1.25rem, 2.5vw, 1.5rem);
@@ -210,16 +209,6 @@ h1, h2, h3, h4, h5, h6 {
 ::selection {
   background: var(--hema-red-01);
   color: var(--hema-shade-12);
-}
-
-/* ─── D2 Diagram Sizing ──────────────────────────────────────────────────── */
-
-.sl-markdown-content img[src*="/d2/"] {
-  max-width: 100%;
-  height: auto;
-  width: auto;
-  display: block;
-  margin: 1.5rem auto;
 }
 
 :focus-visible {

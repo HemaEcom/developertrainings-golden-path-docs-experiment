@@ -1,8 +1,8 @@
 ---
-title: "5. Deployment"
+title: "7. Deployment"
 description: Butler feature sandboxes and the production deployment flow
 sidebar:
-  order: 6
+  order: 7
 ---
 
 Your code is ready — now let's get it running in AWS! Here's how code flows from your branch to production, and how Butler gives you per-branch preview environments for free.

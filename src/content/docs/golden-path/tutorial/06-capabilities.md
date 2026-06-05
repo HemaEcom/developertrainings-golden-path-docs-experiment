@@ -1,8 +1,8 @@
 ---
-title: "4. Core Capabilities"
+title: "6. Core Capabilities"
 description: Integrate HDS, Web Shell, i18n, CMS, testing, server actions, and API authentication
 sidebar:
-  order: 5
+  order: 6
 ---
 
 This is where your MFE becomes a real HEMA service. Each capability below is something you'll integrate — not all at once, but as your service needs them.
@@ -63,24 +63,18 @@ const postcssConfig = {
 export default postcssConfig;
 ```
 
-**`styles/globals.css`:**
+**`styles/globals.css`** (actual pattern from both MFEs):
 ```css
-@import 'tailwindcss' prefix(hds);
+@import 'tailwindcss';
 @import '@hema/hds-tailwindcss-presets';
-
-@source "../node_modules/@hema/hds-components-react";
-@source "../node_modules/@hema/omni-web-app-shell-shell";
 ```
 
-:::note
-The `prefix(hds)` ensures all Tailwind utilities are prefixed with `hds:` (e.g., `hds:bg-light-primary`). The `@source` directives tell Tailwind to scan HDS and Shell packages for class names to include.
-:::
-
-**Use the HEMA font in your layout:**
+**Use the HEMA font in your root layout:**
 ```tsx
 import { hurmeHema } from '@hema/hds-assets/next/font';
 
-<body className={`${hurmeHema.variable} root hds:bg-light-primary`}>
+<html lang={locale} className={hurmeHema.variable}>
+  <body className="hds:overflow-x-hidden hds:bg-light-primary hds:dark:bg-dark-primary hds:text-light-primary hds:dark:text-dark-primary">
 ```
 
 **Use components:**
@@ -94,19 +88,49 @@ export function MyComponent() {
 
 ### 2. Web Shell (Header, Footer, Analytics)
 
-The Shell provides the consistent HEMA layout across all MFEs.
+The Shell provides the consistent HEMA layout across all MFEs. It lives in a **route group layout** (`[locale]/(shop)/layout.tsx`), NOT the root layout.
+
+| Package | Purpose |
+|---------|---------|
+| `@hema/omni-web-app-shell-shell` | Main Shell component (header, footer, layout) |
+| `@hema/omni-web-app-shell-core` | Data fetching (getHeader, getFooter, getCategoryMenu) |
+| `@hema/omni-web-app-shell-analytics` | Analytics tracking, consent management |
 
 ```bash
 npm install @hema/omni-web-app-shell-shell @hema/omni-web-app-shell-core @hema/omni-web-app-shell-analytics
 ```
 
+**Root `layout.tsx`** — minimal, fonts + providers only:
+```tsx
+import { hurmeHema } from '@hema/hds-assets/next/font';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getLocale } from 'next-intl/server';
+import '../styles/global.css';
+
+export default async function RootLayout({ children }) {
+  const locale = await getLocale();
+  const messages = await getMessages({ locale });
+
+  return (
+    <html lang={locale} className={hurmeHema.variable}>
+      <body className="hds:overflow-x-hidden hds:bg-light-primary">
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+**`[locale]/(shop)/layout.tsx`** — Shell wraps content pages:
 ```tsx
 import { getCategoryMenu, getFooter, getHeader, getShellDictionary } from '@hema/omni-web-app-shell-core';
-import { Shell, getDetectedCountry } from '@hema/omni-web-app-shell-shell';
+import { Shell } from '@hema/omni-web-app-shell-shell';
 import { DEFAULT_CONSENT } from '@hema/omni-web-app-shell-analytics';
 import { baseClient } from '@/repositories/sanity/client';
 
-export default async function ShellLayout({ children }) {
+export default async function ShopLayout({ children }) {
   const locale = await getLocale();
 
   const [footerData, headerData, categoryMenuItems, shellDictionary] = await Promise.all([
@@ -134,7 +158,7 @@ export default async function ShellLayout({ children }) {
 ```
 
 :::tip
-For detailed Shell props, analytics configuration, and newsletter action setup, see the [Web Shell Integration](/developertrainings-golden-path-docs-experiment/golden-path/libraries/web-shell-integration) guide.
+The Shell is in a route group so pages that don't need it (product editors, embedded views) can exist without the header/footer. For detailed Shell props and analytics, see the [Web Shell Integration](/developertrainings-golden-path-docs-experiment/golden-path/libraries/web-shell-integration) guide.
 :::
 
 ### 3. Internationalization (i18n)
@@ -151,8 +175,15 @@ npm install next-intl
 ```typescript
 import { defineRouting } from 'next-intl/routing';
 
+export const locales = ['nl-nl', 'fr-fr', 'fr-be', 'de-de', 'nl-be'] as const;
+
+// Domains are configurable via env vars for local dev vs production.
+const stripProtocol = (url: string) => url.replace(/^https?:\/\//, '');
+const domainNL = stripProtocol(process.env.NEXT_PUBLIC_DOMAIN_NL || 'nl.localhost:3000');
+const domainCOM = stripProtocol(process.env.NEXT_PUBLIC_DOMAIN_COM || 'com.localhost:3000');
+
 export const routing = defineRouting({
-  locales: ['nl-nl', 'nl-be', 'fr-fr', 'fr-be', 'de-de'],
+  locales,
   defaultLocale: 'nl-nl',
   localeDetection: false,
   localePrefix: {
@@ -165,8 +196,8 @@ export const routing = defineRouting({
     },
   },
   domains: [
-    { domain: 'www.hema.nl', defaultLocale: 'nl-nl', locales: ['nl-nl'], localePrefix: 'never' },
-    { domain: 'www.hema.com', defaultLocale: 'nl-be', locales: ['nl-be', 'fr-fr', 'fr-be', 'de-de'], localePrefix: 'always' },
+    { localePrefix: 'never', domain: domainNL, defaultLocale: 'nl-nl', locales: ['nl-nl'] },
+    { localePrefix: 'always', domain: domainCOM, defaultLocale: 'nl-be', locales: ['nl-be', 'fr-fr', 'fr-be', 'de-de'] },
   ],
 });
 ```
@@ -181,13 +212,19 @@ const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest): NextResponse {
   const response = intlMiddleware(request);
-  response.headers.set('x-pathname', request.nextUrl.pathname);
+
+  const rewriteUrl = response.headers.get('x-middleware-rewrite');
+  const pathname = rewriteUrl
+    ? new URL(rewriteUrl).pathname
+    : request.nextUrl.pathname;
+
+  response.headers.set('x-pathname', pathname);
   response.headers.set('x-search-params', request.nextUrl.search);
   return response;
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|sitemap|\\.well-known|.*\\.).*)',],
+  matcher: ['/((?!api|_next/static|_next/image|_zones/.+/_next/image|favicon.ico|images|sitemap|\\.well-known|.*\\.).*)',],
 };
 ```
 
@@ -340,7 +377,7 @@ For the full implementation, see the [Kong Authentication guide](/developertrain
 > 📐 **Architecture Decision:** [ADR-0008 — Use PODS to get product data](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786). PODS is the single source of truth for product data.
 
 ```bash
-npm install @apollo/client @apollo/client-integration-nextjs graphql
+npm install @apollo/client@^4 @apollo/client-integration-nextjs graphql
 ```
 
 ```typescript
