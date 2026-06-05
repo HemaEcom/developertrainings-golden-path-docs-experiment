@@ -3,7 +3,7 @@ title: "PODS Integration — Product Data via GraphQL"
 ---
 
 
-> **ADR**: HEM100-ADR-0008 — Use PODS to get product data
+> **ADR**: [HEM100-ADR-0008 — Use PODS to get product data](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 > **Source**: `omni-web-catalog-pdp/src/services/pods/`, `src/clients/graphql/`
 
 ## Overview

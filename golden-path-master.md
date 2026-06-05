@@ -3,6 +3,8 @@
 > Source: [Confluence COCO Space - Page ID 6290538583](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6290538583)
 > Version: 18 | Last synced: 2026-05-28
 
+![Golden Path Cake](/images/cake.png)
+
 ---
 
 ## 1. Purpose
@@ -163,6 +165,6 @@ There is also a spike created to investigate and validate some of the assumption
 
 - [Hema100 - Production Infrastructure](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/...)
 
-As a practical reference, the current CDK implementation in the **omni-web-content** repository can be used as inspiration and starting point. It already follows this architecture and can help accelerate the setup of new microfrontend services while keeping alignment with the defined structure.
+As a practical reference, the current CDK implementation in the **omni-web-catalog-pdp** repository can be used as inspiration and starting point. It already follows this architecture and can help accelerate the setup of new microfrontend services while keeping alignment with the defined structure.
 
-- https://github.com/HemaEcom/omni-web-content-frontend
+- https://github.com/HemaEcom/omni-web-catalog-pdp

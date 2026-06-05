@@ -1,168 +1,196 @@
 ---
-title: Hema100 Composable Frontend Golden Path
-description: The recommended way to build frontend MFEs at HEMA
+title: Hema100 Frontend Golden Path
+description: The recommended way to build frontend MFEs at HEMA — your paved road to production.
 ---
 
+## Welcome to the Golden Path 👋
+
+The **Frontend Golden Path** is your guide to building frontend services at HEMA. Think of it as the paved road through the forest — you *can* go off-road, but if you follow the path, things just work.
+
+It helps you:
+
+- 🚀 Ship new frontend services faster
+- ✅ Make good decisions by default
+- 🧭 Stay aligned with platform and architecture goals
+- 🧠 Reduce cognitive load — no need to reinvent the wheel
+
+This isn't a rigid rulebook. It's a living guide, shaped by the teams who use it, informed by real-world usage, and curated by the Frontend Platform Team.
+
 ---
 
-## 1. Purpose
+## What Is the Golden Path?
 
-The **Frontend Golden Path** defines the default and recommended way to create, run, and evolve frontend services within the **hema100 project**.
-
-Its goal is to help teams:
-
-- Build new frontend services faster
-- Make good decisions by default
-- Stay aligned with platform, architecture, and business goals
-- Reduce cognitive load and avoid reinvention
-
-This Golden Path is intended to be owned and evolved by a frontend chapter and acts as a paved road:
-
-> **You can go off-road, but if you follow the path, things just work.**
-
-Inspired by well-known engineering practices and literature:
-
-- *Accelerate* — fast flow, stability, and low friction
-- *Spotify Model* — autonomy with alignment
-- *Building Micro-frontends* — independent delivery with strong contracts
-
-## 2. What the Golden Path Is (and Is Not)
-
-The Frontend Golden Path is designed to be **fully aligned with HEMA's existing System Architecture Principles**, while being scoped specifically to the **hema100 project**.
-
-Those principles already establish the ***why*** at system level (modularity, scalability, agility, ownership).
-
-The Golden Path focuses on the ***how*** for frontend services.
+It's the **default and recommended way** to create, run, and evolve frontend services within the hema100 project. It's fully aligned with HEMA's System Architecture Principles — those define the *why*, the Golden Path focuses on the *how* for frontend.
 
 **The Golden Path is:**
-
-- A set of common patterns, not rigid rules
+- Common patterns, not rigid rules
 - A practical translation of architecture principles into frontend decisions
-- A starter kit plus guidance, not just documentation
-- A way to encode platform decisions once so teams don't repeat them
-- A shared understanding of how frontend services are built here
+- A starter kit + guidance — not just documentation
+- A shared understanding of how we build things here
 
 **The Golden Path is not:**
-
-- A redefinition of company architecture principles
 - A replacement for ADRs, RFCs, or system-level governance
-- A framework teams are forced to use
+- A framework you're forced to use
 - A blocker for experimentation
-- A one-time document (it evolves with the platform)
+- A one-time document — it evolves with the platform
 
-## 3. Golden Path Principles
+---
 
-The Frontend Golden Path is built on seven core principles that enable teams to deliver value quickly while maintaining quality and consistency.
+## Our Principles
 
-### Composable Architecture
-*Build with building blocks, not monoliths*
+### 🧱 Composable Architecture
+Build with independent, reusable building blocks. Each MFE is its own deployable service — teams work in parallel without stepping on each other.
 
-Build with independent, reusable capabilities rather than monoliths. Micro-frontend architecture enables parallel development and independent deployment.
+### 🛤️ Open and Flexible Framework
+Paved road, not a walled garden. You can deviate when you have good reasons (document it in an ADR!). The platform evolves based on team feedback.
 
-### Open and Flexible Framework
-*Paved road, not a walled garden*
+### ♻️ Reusable Solutions
+Solve once, use everywhere. Templates give you production-ready scaffolding. CDK constructs handle infra. Shared libraries (Web Shell, HDS) handle the common stuff. You focus on what makes your service unique.
 
-The Golden Path is a paved road, not a walled garden. Teams can deviate when they have good reasons, documented through ADRs and RFCs. The platform evolves based on team feedback and contributions, balancing autonomy with alignment.
+### ⚡ Short Feedback Cycles
+Deploy early, deploy often. Automated CI/CD moves code from commit to production quickly. Fast builds, good monitoring, and easy rollback let you iterate with confidence.
 
-### Reusable Solutions
-*Solve once, use everywhere*
+### 🏖️ Feature Sandbox Environments
+Every feature branch gets its own production-like environment automatically. Test realistically, get stakeholder feedback, then merge with confidence. Butler handles the lifecycle.
 
-Solve problems once and use everywhere. Backstage templates provide production-ready scaffolding, CDK constructs encapsulate infrastructure best practices, and shared libraries (web-core, web-shell, Tompouce HDS) provide common functionality. Teams focus on differentiation, not reinventing wheels.
+### 🎯 Quality by Default
+TypeScript, ESLint, Prettier, Vitest, WCAG 2.0 AA accessibility, security headers — all configured from day one. You don't have to think about it; it's already there.
 
-### Short Feedback Cycles
-*Deploy early, deploy often*
+---
 
-Deploy early and often. Automated CI/CD pipelines move code from commit to production quickly. Fast build times, comprehensive monitoring, and rapid rollback capabilities enable teams to learn and iterate faster.
+## How It All Fits Together
 
-### Feature Sandbox Environments
-*Test in production-like conditions before production*
+```d2
+direction: right
 
-Test in production-like conditions before production. Ephemeral PR-based environments are created automatically for every feature branch, enabling realistic testing and stakeholder review. Environments are automatically cleaned up when branches are merged or deleted.
+customer: Customer {
+  shape: person
+}
 
-### Frontend Configuration & Good Practices
+gateway: CloudFront Gateway {
+  shape: cloud
+  routing: Routing Function {
+    shape: hexagon
+  }
+}
 
-Quality and consistency by default. TypeScript for type safety, ESLint and Prettier for code consistency, Vitest for testing, and WCAG 2.0 AA accessibility built into components. Performance budgets, security scanning, and documented coding standards reduce cognitive load and ensure maintainability.
+sfcc: SFCC (Legacy) {
+  shape: rectangle
+  style.fill: "#FFEBEE"
+  style.stroke-dash: 3
+}
 
-### DORA Metrics Alignment
+content: Content MFE {
+  shape: rectangle
+  style.fill: "#E8F5E9"
+  ecs: ECS Fargate
+  next: Next.js App
+}
 
-These principles directly support the four key metrics:
+pdp: PDP MFE {
+  shape: rectangle
+  style.fill: "#E3F2FD"
+  ecs: ECS Fargate
+  next: Next.js App
+}
 
-- **Deployment Frequency:** Automated CI/CD, PR environments, Butler automation
-- **Lead Time for Changes:** Templates, reusable solutions, composable architecture
-- **Time to Restore Service:** Automated rollback, monitoring, feature flags
-- **Change Failure Rate:** Sandbox testing, automated tests, progressive deployment
+account: Account MFE {
+  shape: rectangle
+  style.fill: "#FFF3E0"
+  lambda: Lambda
+}
 
-By following the Golden Path, teams get production-ready infrastructure, CI/CD pipelines, monitoring, security, and compliance configured from day one, reducing time to first deployment.
+shared: Shared Platform {
+  shape: rectangle
+  style.fill: "#F3E5F5"
+  kong: Kong API Gateway {
+    shape: hexagon
+  }
+  shell: Web Shell {
+    shape: package
+  }
+  hds: HDS / Tompouce {
+    shape: package
+  }
+  sanity: Sanity CMS {
+    shape: cylinder
+  }
+}
 
-## 4. Core Concept: Service-Oriented Frontend
+customer -> gateway: HTTPS
+gateway.routing -> sfcc: "/* (fallback)" {
+  style.stroke-dash: 3
+}
+gateway.routing -> content: "/inspiratie/*"
+gateway.routing -> pdp: "/p/*.html"
+gateway.routing -> account: "/account/*"
 
-The core definition of **what a service is** and how services are organized across our IT landscape is already documented and shared at organizational level and applies to the hema100 project as well.
+content -> shared.kong: APIs
+content -> shared.shell
+content -> shared.hds
+content -> shared.sanity
+pdp -> shared.kong: APIs
+pdp -> shared.shell
+pdp -> shared.hds
+account -> shared.kong: APIs
+```
 
-**Source of truth:** *Understanding Services in Our IT Landscape* (internal documentation)
+Each MFE is independent but shares:
+- **Web Shell** — consistent header, footer, analytics
+- **HDS (Tompouce)** — design system components and tokens
+- **Sanity CMS** — content management
+- **Gateway** — CloudFront routing to the right service
 
-This Golden Path **does not redefine or duplicate** that model.
+---
 
-Instead, it:
+## The Service Lifecycle
 
-- Builds **on top of the existing service definition**
-- Applies it specifically to **frontend services**
-- Clarifies how frontend services fit into the broader service ecosystem
+```d2
+direction: right
 
-Throughout this document, when we refer to a *frontend service*, we mean:
+create: "Create\n(from template)" {
+  shape: rectangle
+  style.fill: "#E8F5E9"
+}
 
-> A service as defined by the company, implemented with frontend responsibilities and capabilities.
+build: "Build\n(your app)" {
+  shape: rectangle
+  style.fill: "#E3F2FD"
+}
 
-## 5. Open Contribution Model (ADRs & RFCs)
+deploy: "Deploy\n(via pipeline)" {
+  shape: rectangle
+  style.fill: "#FFF3E0"
+}
 
-The Frontend Golden Path is not a closed or static document.
+operate: "Operate\n(in production)" {
+  shape: rectangle
+  style.fill: "#F3E5F5"
+}
 
-Our company culture encourages **organic, open contribution** through tools such as:
+create -> build -> deploy -> operate
+```
 
-- **Architecture Decision Records (ADRs)** to capture concrete decisions
-- **Requests for Comments (RFCs)** to propose, discuss, and evolve ideas
+At each stage, the Golden Path provides defaults:
+- **Create** — Backstage template gives you repo + CDK + CI/CD
+- **Build** — Next.js + HDS + Web Shell + i18n + CMS
+- **Deploy** — CodePipeline (main) + Butler (feature branches)
+- **Operate** — Monitoring, logging, alarms, rollback
 
-The Golden Path reflects the **direction emerging from these instruments**:
+---
 
-- It consolidates agreed decisions
-- It documents proven patterns
-- It makes implicit knowledge explicit
+## Contributing
 
-In this sense, the Golden Path should be seen as an **open framework** for the frontend platform:
+The Golden Path is an **open framework**. It's shaped by:
 
-- Informed by real usage
-- Shaped by teams
-- Curated by the Frontend Platform Team
+- **ADRs** — Architecture Decision Records for concrete decisions ([view all ADRs](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786))
+- **RFCs** — Requests for Comments for proposals and discussions
+- **Team feedback** — Real usage informs what gets added or changed
 
 ADRs and RFCs are inputs. The Golden Path is the living synthesis.
 
-### 5.1 List of Related ADRs
+---
 
-- Teams SHOULD use NextJS
-- Use PODS to get the product data
-- Use Newsletter API
-- Use Sanity directly for the editorial content
+## Ready to Start?
 
-## 6. Golden Path Lifecycle
-
-- Create with **template** → Build → Deploy → Operate
-- Default tooling and automation at each stage
-
-## 7. DevOps & Delivery
-
-- CI/CD expectations for frontend services
-- PR-based environments and short-lived stacks
-- Platform-managed deployment automation, with **Butler** as the current implementation
-
-## 8. Infrastructure CDK
-
-The base infrastructure for the microfrontend setup is described in the following diagram. It outlines the core components, environment structure, and how services are connected across the platform.
-
-> [Infrastructure Diagram - Screenshot 2026-02-12](https://hemaecom.atlassian.net/wiki/download/attachments/6290538583/Screenshot%202026-02-12%20at%2012.00.02.png)
-
-There is also a spike created to investigate and validate some of the assumptions and technical decisions related to this setup:
-
-- [Hema100 - Production Infrastructure](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/...)
-
-As a practical reference, the current CDK implementation in the **omni-web-content** repository can be used as inspiration and starting point. It already follows this architecture and can help accelerate the setup of new microfrontend services while keeping alignment with the defined structure.
-
-- https://github.com/HemaEcom/omni-web-content-frontend
+Head to the [Tutorial](/developertrainings-golden-path-docs-experiment/golden-path/tutorial/01-overview) to create your first MFE. ✨

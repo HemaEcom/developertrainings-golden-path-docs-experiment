@@ -1,14 +1,21 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import astroD2 from 'astro-d2';
 
 export default defineConfig({
   site: 'https://hemaecom.github.io',
   base: '/developertrainings-golden-path-docs-experiment',
   outDir: './docs',
   integrations: [
+    astroD2({
+      sketch: true,
+    }),
     starlight({
       title: 'Frontend Golden Path',
       description: 'The recommended way to build frontend MFEs at HEMA',
+      logo: {
+        src: './public/hema-logo.svg',
+      },
       customCss: ['./src/styles/hema-theme.css'],
       social: [
         {
@@ -22,8 +29,11 @@ export default defineConfig({
           label: 'Overview',
           items: [
             { label: 'Golden Path', slug: 'golden-path/overview' },
-            { label: 'Tutorial', slug: 'golden-path/tutorial' },
           ],
+        },
+        {
+          label: 'Tutorial',
+          autogenerate: { directory: 'golden-path/tutorial' },
         },
         {
           label: 'Onboarding',

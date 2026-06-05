@@ -6,7 +6,9 @@ title: "Gateway Registration Guide"
 > Reference repos:
 > - [omni-web-gateway](https://github.com/HemaEcom/omni-web-gateway) — The gateway infrastructure
 > - [omni-web-gateway-api](https://github.com/HemaEcom/omni-web-gateway-api) — The management API
-> - [omni-web-content-frontend](https://github.com/HemaEcom/omni-web-content-frontend) — Example MFE with gateway registration
+> - [omni-web-catalog-pdp](https://github.com/HemaEcom/omni-web-catalog-pdp) — Example MFE with gateway registration
+>
+> 📐 **Architecture Decision:** [ADR-0013 — Use CloudFront Functions for gateway router](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 
 ---
 
@@ -14,9 +16,42 @@ title: "Gateway Registration Guide"
 
 The **Omni Web Gateway** is a CloudFront distribution that serves as the single entry point for all HEMA web traffic. It routes requests to the correct micro-frontend (MFE) based on URL path patterns.
 
-```
-User → CloudFront (gateway) → Routing Function → MFE Origin (ECS via VPC Origin)
-                                              └→ SFCC (default fallback)
+```d2
+direction: right
+
+user: User {
+  shape: person
+}
+
+gateway: CloudFront Gateway {
+  shape: cloud
+  routing: Routing Function {
+    shape: hexagon
+  }
+  kvs: Key-Value Store {
+    shape: cylinder
+  }
+}
+
+mfe: MFE Origin {
+  shape: rectangle
+  style.fill: "#E8F5E9"
+  label: "MFE Origin\n(ECS via VPC Origin)"
+}
+
+sfcc: SFCC {
+  shape: rectangle
+  style.fill: "#FFEBEE"
+  style.stroke-dash: 3
+  label: "SFCC\n(default fallback)"
+}
+
+user -> gateway: HTTPS
+gateway.routing -> gateway.kvs: lookup path
+gateway.routing -> mfe: "match found"
+gateway.routing -> sfcc: "no match" {
+  style.stroke-dash: 3
+}
 ```
 
 Each MFE **registers its routes** with the gateway during CDK deployment. The gateway's CloudFront Function reads these routes from a Key-Value Store (KVS) and directs traffic accordingly.
@@ -26,6 +61,62 @@ Each MFE **registers its routes** with the gateway during CDK deployment. The ga
 ---
 
 ## How It Works (High Level)
+
+```d2
+direction: down
+
+mfe_account: Your MFE AWS Account {
+  style.fill: "#E3F2FD"
+
+  ecs: ECS Service {
+    shape: rectangle
+  }
+  alb: ALB {
+    shape: rectangle
+  }
+  vpc_origin: VPC Origin {
+    shape: hexagon
+  }
+  ram: RAM Resource Share {
+    shape: diamond
+  }
+  registration: GatewayRegistration {
+    shape: rectangle
+    style.fill: "#C8E6C9"
+    label: "GatewayRegistration\n(CDK Construct)"
+  }
+
+  ecs -> alb: health checks
+  alb -> vpc_origin: private link
+  vpc_origin -> ram: shares access
+}
+
+gateway_account: Gateway AWS Account {
+  style.fill: "#FFF3E0"
+
+  api: Gateway Management API {
+    shape: rectangle
+  }
+  kvs: CloudFront KVS {
+    shape: cylinder
+  }
+  cf: CloudFront Distribution {
+    shape: cloud
+  }
+  routing_fn: Routing Function {
+    shape: hexagon
+  }
+
+  api -> kvs: "updates routes"
+  cf -> routing_fn: "evaluates request"
+}
+
+mfe_account.ram -> gateway_account.cf: "cross-account\nVPC Origin access"
+mfe_account.registration -> gateway_account.api: "registers routes\n+ VPC Origin"
+gateway_account.routing_fn -> mfe_account.vpc_origin: "routes traffic"
+```
+
+**The flow:**
 
 1. Your runtime stack deploys an **ECS service** behind an **ALB** with a **VPC Origin**
 2. The VPC Origin is shared with the gateway account via **RAM Resource Share**

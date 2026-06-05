@@ -3,7 +3,7 @@ title: "Kong API Authentication"
 ---
 
 
-> **ADR**: HEM100-ADR-0015 — Auth with API management
+> **ADR**: [HEM100-ADR-0015 — Auth with API management](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 > **Source**: `omni-web-catalog-pdp/src/services/auth/kong-authenticator.ts`
 
 ## Overview

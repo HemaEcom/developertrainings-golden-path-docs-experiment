@@ -3,7 +3,9 @@ title: "Multi-Zone Next.js Configuration"
 ---
 
 
-> Reference: [omni-web-content-frontend/src/next.config.ts](https://github.com/HemaEcom/omni-web-content-frontend/blob/main/src/next.config.ts)
+> Reference: [omni-web-catalog-pdp/src/next.config.ts](https://github.com/HemaEcom/omni-web-catalog-pdp/blob/main/src/next.config.ts)
+>
+> 📐 **Architecture Decisions:** [ADR-0016 — Multi-zone support](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) | [ADR-0017 — URL namespace structure](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 
 ---
 

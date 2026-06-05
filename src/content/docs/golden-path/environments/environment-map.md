@@ -3,9 +3,13 @@ title: "Environments — Full Landscape Map"
 ---
 
 
-> How environments are structured across all HEMA100 frontend services.
+> How environments are structured across HEMA100 frontend services.
+>
+> For general AWS access, account requests, and platform-wide policies, see the [Platform Catalog](https://servicecatalog.ui.hema.digital/docs/default/component/metis-general/architecture-principles/reference/platform-catalog/) and [AWS Access Guide](https://servicecatalog.ui.hema.digital/docs/default/component/metis-general/aws/aws-access/) in metis-general.
 
 ## AWS Accounts
+
+The HEMA100 frontend services share two AWS accounts (one per landscape):
 
 | Account ID | Purpose | Services Deployed |
 |------------|---------|-------------------|

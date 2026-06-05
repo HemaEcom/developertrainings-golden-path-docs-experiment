@@ -8,10 +8,197 @@ Each entry follows:
 ```
 ## [YYYY-MM-DD] - Brief title
 ### What changed
+```
+
+---
+
+## [2026-06-02] - Tutorial cross-validation against repo implementations
+### What changed
+- **next.config.ts**: Rewrote to show actual `deriveZoneConfig()` + `withNextIntl()` pattern (not plain `assetPrefix` string). Added production rewrite that strips zone prefix. Added `serverActions.allowedOrigins` with gateway dev domains.
+- **Dockerfile**: Replaced single-pattern with two documented patterns (PDP-style ARG placeholders vs Content-style BuildKit secrets). Noted port 3000 vs 80 difference.
+- **App Router structure**: Updated to show actual `src/` as Next.js root (not `app/`). Added `clients/`, `server-actions/`, `stores/`, `messages/` directories. Showed `(shop)` route group as the correct Shell location.
+- **HDS section**: Added version note (2.1.0-rc.*), fixed postcss.config.mjs to use `const postcssConfig` pattern, fixed body className to match actual PDP implementation with HDS utility classes.
+- **Web Shell section**: Major rewrite — Shell is in route group layout `[locale]/(shop)/layout.tsx`, NOT root layout. Added package table with all 5 packages (shell, core, analytics, api-client, platform-api). Root layout is minimal (fonts + NextIntlClientProvider only).
+- **i18n section**: Updated routing.ts to match actual implementation with `stripProtocol()` helper, env-var-based domains (`NEXT_PUBLIC_DOMAIN_NL`/`NEXT_PUBLIC_DOMAIN_COM`), local defaults. Updated middleware matcher to include `_zones/.+/_next/image` exclusion.
+- **buildspec-ci section**: Showed both Content (explicit CodeArtifact, Node 22) and PDP (co:login script, Node 24) patterns with explanation of differences.
+- **Local dev section**: Added multi-domain testing tip with `/etc/hosts` configuration.
+- **Summary table**: Expanded to include actual versions from both repos, added React 19, Tailwind v4, zustand, @hema/monitoring-logger columns.
+- **Apollo section**: Updated to v4 (`@apollo/client@^4`).
+- **Dev proxying section**: Simplified to reference the next.config.ts template, added SFCC proxy example from PDP.
+- **Scaffold step**: Added note that Next.js app lives in `src/` dir (not `app/`).
+
+### Why
+- The tutorial had several simplifications and inaccuracies compared to the actual repo implementations. New developers following the guide would hit configuration issues.
+- The Shell placement was incorrect (root layout vs route group layout) — this is a fundamental architectural difference.
+- The i18n routing was hardcoded to `www.hema.nl` instead of using env vars, which breaks local development.
+- The Dockerfile section didn't show the real multi-secret pattern needed for static generation.
+
+### Sources used
+- `omni-web-catalog-pdp/src/next.config.ts` — actual Next.js config with zone config, intl plugin, rewrites
+- `omni-web-catalog-pdp/src/package.json` — actual dependency versions (Next 16, React 19, Apollo 4, etc.)
+- `omni-web-catalog-pdp/src/middleware.ts` — actual middleware implementation
+- `omni-web-catalog-pdp/src/Dockerfile` — PDP Docker pattern (alpine, ARG placeholders)
+- `omni-web-catalog-pdp/src/app/layout.tsx` — root layout (minimal, fonts + NextIntl)
+- `omni-web-catalog-pdp/src/app/[locale]/(shop)/layout.tsx` — Shell layout (route group)
+- `omni-web-catalog-pdp/src/i18n/routing.ts` — actual routing with env-var domains
+- `omni-web-catalog-pdp/src/postcss.config.mjs` — actual postcss config
+- `omni-web-catalog-pdp/buildspec-ci.yaml` — PDP Butler buildspec (Node 24, co:login)
+- `omni-web-content-frontend/src/next.config.ts` — Content config with headers (No-Vary-Search)
+- `omni-web-content-frontend/src/package.json` — Content deps (Next 15, vitest 3, etc.)
+- `omni-web-content-frontend/src/middleware.ts` — Content middleware (same pattern)
+- `omni-web-content-frontend/src/Dockerfile` — Content Docker (slim, BuildKit secrets)
+- `omni-web-content-frontend/src/i18n/routing.ts` — Content routing (same structure)
+- `omni-web-content-frontend/buildspec-ci.yaml` — Content Butler buildspec (Node 22, explicit token)
+- `omni-web-app-shell-library/library/packages/` — Shell package list (shell, core, analytics, api-client, platform-api, examples)
+- `hema-design-system/packages/` — HDS packages (components-react, assets, tailwindcss-presets, design-tokens, css)
+
+### Gaps remaining
+- `deriveZoneConfig()` utility: need to document or provide template for this function
+- PDP uses Next.js 16 (latest), Content still on 15 — document the migration path
+- Content Frontend uses `next-sanity@^9` while PDP uses `next-sanity@^12` — version gap to document
+- Content has `instrumentation.ts` (OpenTelemetry) — not yet documented
+- Content has `@hema/omni-web-app-shell-platform-api` — role not explained
+- The CDK `lib/` infrastructure (runtime-stack, pipeline-stack) differences are not yet documented in the tutorial
+
+---
+
+## [2026-06-01] - CI/CD Pipeline Overview with D2 diagram
+### What changed
+- Rewrote `src/content/docs/golden-path/tutorial/03-cicd-pipeline.md` — added high-level introduction explaining what the pipeline is and how it flows
+- Added D2 diagram showing Developer → GitHub → Pipeline (Synth → Self-Mutate → Deploy → E2E) → Running Service
+- Added "Two Stacks, One Repo" explanation with factory/product analogy
+- Added link to the deep-dive reference page
+- Created `src/content/docs/golden-path/ci-cd/pipeline-overview.md` — full technical reference with detailed D2 architecture diagram
+- Documented each pipeline stage, build environment, design decisions, and how to add a new pipeline
+### Why
+- The tutorial page jumped straight into commands without explaining what the pipeline is or how it flows
+- New developers need a visual mental model before running `cdk deploy`
+- The D2 diagram makes the flow immediately understandable
+### Sources used
+- `omni-web-catalog-pdp/lib/pipeline/pipeline-stack.ts` — full pipeline definition
+- `omni-web-catalog-pdp/bin/solution.ts` — CDK app entry point
+- `omni-web-catalog-pdp/buildspec-ci.yaml` — Butler buildspec
+- `omni-web-catalog-pdp/package.json` — Node.js version, scripts
+### Gaps remaining
+- Production pipeline (multi-account with approval gates) not yet documented
+- Rollback procedures not documented
+
+---
+
+## [2026-05-29] - Added cake image to Golden Path master doc
+### What changed
+- Added `![Golden Path Cake](/images/cake.png)` to `golden-path-master.md` as a banner image below the header
+### Why
+- User added a cake image to `public/images/` and requested it be included in the main Golden Path document
+### Sources used
+- Local file: `public/images/cake.png`
+### Gaps remaining
+- None
+
+---
+
+## Previous entries
 ### Why
 ### Gaps identified
 ### Next steps
 ```
+
+---
+
+## [2026-05-29] - Tutorial split into sub-pages + cross-reference corrections
+
+### What changed
+- **Split:** Single `tutorial.md` → 7 sub-pages in `src/content/docs/golden-path/tutorial/`:
+  - `01-overview.md` — Intro, prerequisites, table of contents
+  - `02-foundation.md` — Template, AWS accounts, clone
+  - `03-cicd-pipeline.md` — CDK deploy, Butler
+  - `04-nextjs-setup.md` — Scaffold, next.config, Dockerfile, routes
+  - `05-capabilities.md` — All 12 capabilities
+  - `06-deployment.md` — buildspec, pipeline flow, env vars
+  - `07-local-dev.md` — Run locally, summary table, what's next
+- **Updated sidebar:** `astro.config.mjs` now uses `autogenerate` for the Tutorial section
+- **Fixed `next.config.ts`:** Added `createNextIntlPlugin()` wrapper and correct `/_zones/{service-id}` pattern (was using a generic env var)
+- **Fixed CSS setup:** Changed `@import 'tailwindcss'` → `@import 'tailwindcss' prefix(hds)` and added required `@source` directives for HDS and Shell packages
+- **Fixed Shell integration:** Uses `baseClient` import (not undefined `sanityClient`), added route group note
+- **Reduced duplication:** CMS, Gateway, Kong, Apollo, and Testing sections now show integration steps only and link to detailed guides instead of repeating full implementations
+
+### Why
+Cross-referencing with the actual repos revealed:
+1. The CSS setup was wrong — both repos use `prefix(hds)` and `@source` directives
+2. The `next.config.ts` was missing the `next-intl` plugin wrapper (both repos use it)
+3. The `assetPrefix` pattern was oversimplified — real repos derive it from `serviceId` via `deriveZoneConfig()`
+4. Several sections duplicated content already in detailed guide pages
+
+### Sources used
+- `omni-web-content-frontend/src/utils/zone-config.ts` — actual assetPrefix derivation
+- `omni-web-content-frontend/src/styles/globals.css` — real CSS with prefix + @source
+- `omni-web-content-frontend/src/postcss.config.mjs` — real postcss config
+- `omni-web-content-frontend/src/next.config.ts` — createNextIntlPlugin wrapper
+- `omni-web-catalog-pdp/src/styles/global.css` — confirms same CSS pattern
+- `omni-web-catalog-pdp/src/postcss.config.mjs` — confirms same postcss pattern
+
+---
+
+## [2026-05-29] - Tutorial rewrite: Complete MFE capabilities coverage
+
+### What changed
+- **Rewritten:** `tutorial.md` — Complete rewrite from a partial/TODO-heavy tutorial to a comprehensive guide covering all 8 core capabilities every HEMA MFE needs
+- **Rewritten:** `src/content/docs/golden-path/tutorial.md` — Starlight version synced with the same content
+- **Updated (PDP iteration):** Added 8 more capabilities (7–14) discovered from `omni-web-catalog-pdp`:
+  - Server Actions pattern with `allowedOrigins` config
+  - Kong OAuth2 authentication (KongAuthenticator class)
+  - Apollo Client for GraphQL/PODS with `registerApolloClient`
+  - Zustand for client-side state management
+  - Route Groups `(shop)` for layout variants
+  - Dev API proxying via Next.js rewrites
+  - Updated summary table with all 19 capabilities
+
+### Why
+The previous tutorial had:
+- Part 4 (Infrastructure) was just a link with a TODO comment
+- Part 5 (Platform Capabilities) only mentioned HDS with a TODO
+- No code examples from actual implementations
+- Missing capabilities: i18n, CMS, testing, health checks, env config, local dev
+
+After the initial rewrite based on `omni-web-content-frontend`, cross-referencing with `omni-web-catalog-pdp` revealed additional patterns that are essential for MFEs that consume backend APIs (product data, commerce services). These are not optional — any MFE calling PODS or Commerce APIs needs Kong auth and Apollo.
+
+### Sources used
+- **Repos read (content-frontend):**
+  - `omni-web-content-frontend/src/package.json`, `next.config.ts`, `middleware.ts`, `app/layout.tsx`, `i18n/routing.ts`, `Dockerfile`, `buildspec-ci.yaml`
+- **Repos read (catalog-pdp):**
+  - `omni-web-catalog-pdp/src/package.json` — Next.js 16, Apollo Client, Zustand, embla-carousel
+  - `omni-web-catalog-pdp/src/next.config.ts` — `outputFileTracingRoot`, dev rewrites, `serverActions.allowedOrigins`
+  - `omni-web-catalog-pdp/src/middleware.ts` — same i18n pattern, simpler matcher
+  - `omni-web-catalog-pdp/src/app/layout.tsx` — root layout without Shell (Bazaarvoice script)
+  - `omni-web-catalog-pdp/src/app/[locale]/(shop)/layout.tsx` — Shell in route group
+  - `omni-web-catalog-pdp/src/services/auth/kong-authenticator.ts` — full Kong OAuth2 implementation
+  - `omni-web-catalog-pdp/src/clients/graphql/apollo-client-rsc.ts` — Apollo + Kong integration
+  - `omni-web-catalog-pdp/src/services/pods/pods-service.ts` — PODS service with Result pattern
+  - `omni-web-catalog-pdp/src/server-actions/` — 5 server action modules
+  - `omni-web-catalog-pdp/src/stores/` — Zustand store pattern
+  - `omni-web-catalog-pdp/src/Dockerfile` — node:22-alpine, placeholder build args
+  - `omni-web-catalog-pdp/buildspec-ci.yaml` — Node 24, `co:login` pattern
+  - `omni-web-catalog-pdp/docker-compose.yml` — local containerized dev
+  - `omni-web-catalog-pdp/package.json` — Node >=24, CDK 2.251
+
+### Key differences between content-frontend and catalog-pdp
+| Aspect | Content Frontend | Catalog PDP |
+|--------|-----------------|-------------|
+| Next.js version | 15 | 16 |
+| Node.js | 22 | 24 |
+| Shell placement | Root layout | Route group `(shop)/layout.tsx` |
+| Data source | Sanity CMS (GROQ) | PODS (GraphQL via Apollo) + Sanity |
+| API auth | None (Sanity token only) | Kong OAuth2 (client credentials) |
+| State management | None | Zustand |
+| Server Actions | Newsletter only | Stock, newsletter, PODS, Sanity, commerce |
+| Docker base | node:22-slim | node:22-alpine |
+| Build secrets | BuildKit secrets (runtime) | Build ARGs (placeholders) |
+
+### Gaps remaining
+- Third-party script integration patterns (Bazaarvoice, GTM) — mentioned but not a full guide
+- `docker-compose.yml` for local dev — PDP has it, not yet in tutorial
+- Result type pattern (`success`/`failure`) — good practice, not yet documented
+- Playwright per-locale test projects — PDP runs tests per country
 
 ---
 

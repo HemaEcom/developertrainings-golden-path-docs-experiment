@@ -1,315 +1,133 @@
 ---
-title: "Web Shell Integration Guide"
+title: "Web Shell Integration"
 ---
 
-
-> Reference repo: [omni-web-app-shell-library](https://github.com/HemaEcom/omni-web-app-shell-library)
-> Current version: **3.1.1** (monorepo) / **3.0.0** (consumed by MFEs)
-
----
+> **Repo:** [omni-web-app-shell-library](https://github.com/HemaEcom/omni-web-app-shell-library)
+> **Version:** 3.0.0
+>
+> 📐 **Architecture Decisions:** [ADR-0001 — Build a header/footer component](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) | [ADR-0019 — Analytics integration](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 
 ## What Is the Web Shell?
 
-The Web Shell is a shared library that provides the unified application wrapper for all HEMA micro-frontends. It handles:
+The Web Shell wraps every MFE with a consistent HEMA experience: header, footer, navigation, analytics (GTM + consent), and search. It's a monorepo of 5 packages.
 
-- **Header and footer** — Consistent navigation across all MFEs
-- **Analytics** — GTM integration with GDPR-compliant consent management
-- **Core utilities** — Data fetching for shell content (Sanity CMS), i18n, search
-- **Platform API** — Client for HEMA platform services
-- **API Client** — Type-safe HTTP clients generated from OpenAPI specs
+```d2
+direction: down
 
-Every MFE wraps its content with the Shell component to get a consistent user experience.
+shell: "Web Shell" {
+  style.fill: "#C8E6C9"
+  direction: right
 
----
+  ui: "@hema/shell" {
+    style.fill: "#E8F5E9"
+    header: "Header"
+    nav: "Navigation"
+    footer: "Footer"
+    consent: "Consent Banner"
+  }
+
+  core: "@hema/shell-core" {
+    style.fill: "#E3F2FD"
+    fetch: "Fetch header/footer"
+    dict: "i18n dictionary"
+  }
+
+  analytics: "@hema/shell-analytics" {
+    style.fill: "#FFF9C4"
+    gtm: "GTM"
+    events: "Event tracking"
+    consent_gate: "Consent gating"
+  }
+}
+
+sanity: "Sanity CMS" {
+  style.fill: "#FFCCBC"
+}
+
+mfe: "Your MFE pages" {
+  style.fill: "#E3F2FD"
+}
+
+sanity -> shell.core: "header/footer content"
+shell -> mfe: "wraps"
+```
 
 ## Packages
 
-The library is a monorepo with 5 packages:
+| Package | Purpose |
+|---------|---------|
+| `@hema/omni-web-app-shell-shell` | Main Shell component (header, footer, consent banner, providers) |
+| `@hema/omni-web-app-shell-core` | Data fetching for shell content from Sanity CMS, i18n dictionary |
+| `@hema/omni-web-app-shell-analytics` | GTM event tracking with consent gating |
+| `@hema/omni-web-app-shell-platform-api` | Platform API client |
+| `@hema/omni-web-app-shell-api-client` | Type-safe API clients (Newsletter, Products) via Kiota |
 
-| Package | npm Name | Purpose |
-|---------|----------|---------|
-| **shell** | `@hema/omni-web-app-shell-shell` | Main Shell component (header, footer, providers, consent banner) |
-| **core** | `@hema/omni-web-app-shell-core` | Data fetching (header/footer from Sanity), i18n dictionary, search logic |
-| **analytics** | `@hema/omni-web-app-shell-analytics` | GTM event tracking, consent gating, `useAnalytics` hook |
-| **platform-api** | `@hema/omni-web-app-shell-platform-api` | Platform API client |
-| **api-client** | `@hema/omni-web-app-shell-api-client` | Type-safe API clients (Newsletter, Omni-Products) via Kiota |
-
----
-
-## Installation
-
-### 1. Authenticate with CodeArtifact
+## Quick Setup
 
 ```bash
-npm run co:login
+npm install @hema/omni-web-app-shell-shell @hema/omni-web-app-shell-core @hema/omni-web-app-shell-analytics
 ```
 
-### 2. Add Dependencies
+## Integration Pattern
 
-In your `src/package.json`:
+The Shell wraps your app in a layout file. It fetches header/footer data from Sanity CMS using the same client your content uses:
 
-```json
-{
-  "dependencies": {
-    "@hema/omni-web-app-shell-shell": "3.0.0",
-    "@hema/omni-web-app-shell-core": "3.0.0",
-    "@hema/omni-web-app-shell-analytics": "3.0.0",
-    "@hema/omni-web-app-shell-platform-api": "^3.0.0",
-    "@next/third-parties": "^15.5.18"
-  }
-}
-```
-
-### 3. Peer Dependencies
-
-The shell requires these in your project:
-
-```json
-{
-  "dependencies": {
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "next": "^15.5.18",
-    "@hema/hds-components-react": "^2.1.0-rc.1778855422330",
-    "@hema/hds-tailwindcss-presets": "^2.1.0-rc.1778855422330"
-  }
-}
-```
-
----
-
-## Basic Integration
-
-### Root Layout Setup
-
-Wrap your Next.js app with the Shell in your root layout:
-
-```typescript
-// src/app/layout.tsx
+```tsx
+import { getCategoryMenu, getFooter, getHeader, getShellDictionary } from '@hema/omni-web-app-shell-core';
 import { Shell } from '@hema/omni-web-app-shell-shell';
 import { DEFAULT_CONSENT } from '@hema/omni-web-app-shell-analytics';
-import type { AnalyticsEnvironment } from '@hema/omni-web-app-shell-analytics';
-import {
-  getCategoryMenu,
-  getFooter,
-  getHeader,
-  getShellDictionary,
-} from '@hema/omni-web-app-shell-core';
+import { baseClient } from '@/repositories/sanity/client';
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const locale = 'nl-nl';
-  const environment: AnalyticsEnvironment = 'test';
+export default async function ShellLayout({ children }) {
+  const locale = await getLocale();
 
-  // Fetch shell data from Sanity CMS
-  const [headerData, footerData, messages, categoryMenuItems] =
-    await Promise.all([
-      getHeader({ client: sanityClient, locale }),
-      getFooter({ client: sanityClient, locale }),
-      getShellDictionary(locale),
-      getCategoryMenu({ client: sanityClient, locale }),
-    ]);
+  const [footerData, headerData, menuItems, messages] = await Promise.all([
+    getFooter({ locale, client: baseClient }),
+    getHeader({ locale, client: baseClient }),
+    getCategoryMenu({ locale, client: baseClient }),
+    getShellDictionary(locale),
+  ]);
 
   return (
-    <html lang="en">
-      <head>
-        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
-        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
-      </head>
-      <body>
-        <Shell
-          locale={locale}
-          messages={messages}
-          environment={environment}
-          gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''}
-          initialConsent={DEFAULT_CONSENT}
-          headerData={headerData}
-          menuItems={categoryMenuItems}
-          footerData={footerData}
-          pageType="home"
-        >
-          <main className="sfcc-layout">{children}</main>
-        </Shell>
-      </body>
-    </html>
+    <Shell
+      locale={locale}
+      headerData={headerData}
+      footerData={footerData}
+      menuItems={menuItems}
+      messages={messages}
+      environment={process.env.ENVIRONMENT || 'test'}
+      initialConsent={DEFAULT_CONSENT}
+      pageType="content"
+    >
+      {children}
+    </Shell>
   );
 }
 ```
 
-### SFCC Layout Class (Temporary)
+## Key Concepts
 
-While SFCC pages coexist with MFE pages, apply the `sfcc-layout` class to your main content area for consistent page width:
+- **Shell placement** — Can be in root layout or a [route group](/developertrainings-golden-path-docs-experiment/golden-path/tutorial/05-capabilities#10-route-groups-for-layout-variants) layout (for pages that need no shell, like embedded editors)
+- **Analytics** — Events are consent-gated automatically. Use `useAnalytics()` hook in client components
+- **`isEmbedded`** — Set to `true` to hide header/footer (for in-app webviews)
+- **Search** — Pass `searchActions` prop to enable header search (requires server action implementation)
+- **`pageType`** — Identifies the page for GTM (e.g., `'home'`, `'pdp'`, `'content'`)
 
-```css
-/* src/app/globals.css */
-/* TODO(COFI-1183): remove once SFCC pages are gone */
-.sfcc-layout {
-  @apply hds-max-w-[1280px] hds-mx-auto hds-w-auto;
-}
+## Analytics Usage
 
-@media only screen and (min-width: 1336px) {
-  .sfcc-layout { @apply hds-px-5; }
-}
-@media only screen and (min-width: 1025px) and (max-width: 1335px) {
-  .sfcc-layout { @apply hds-px-12; }
-}
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
-  .sfcc-layout { @apply hds-px-8; }
-}
-@media only screen and (max-width: 767px) {
-  .sfcc-layout { @apply hds-px-4; }
-}
-```
-
----
-
-## Shell Props Reference
-
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `children` | `ReactNode` | Yes | Your app content |
-| `locale` | `string` | Yes | Locale code (e.g., `'nl-nl'`) |
-| `messages` | `Record<string, unknown>` | Yes | i18n dictionary from `getShellDictionary()` |
-| `environment` | `'prod' \| 'int' \| 'test'` | Yes | Analytics environment |
-| `pageType` | `string` | Yes | Page type for GTM (e.g., `'home'`, `'pdp'`, `'lister'`) |
-| `gtmId` | `string` | No | GTM container ID (default: `'GTM-TZKLP7T'`) |
-| `initialConsent` | `ConsentState` | No | Initial GDPR consent state |
-| `headerData` | `HeaderData` | No | Header data from Sanity |
-| `menuItems` | `CategoryMenuItem[]` | No | Category menu items |
-| `footerData` | `FooterData` | No | Footer data from Sanity |
-| `searchActions` | `SearchActions` | No | Search server actions for header search |
-| `isEmbedded` | `boolean` | No | Hide header/footer (for in-app webviews) |
-| `appConsent` | `AppConsentQueryParams` | No | App-forwarded consent (suppresses banner) |
-
----
-
-## Analytics Integration
-
-### Tracking Events
-
-```typescript
+```tsx
 'use client';
-
 import { useAnalytics } from '@hema/omni-web-app-shell-analytics';
 
 export function ProductCard({ product }) {
   const { trackEvent } = useAnalytics();
-
-  const handleAddToCart = () => {
-    trackEvent({
-      event: 'add_to_cart',
-      productId: product.id,
-      productName: product.name,
-      price: product.price,
-    });
-  };
-
-  return <button onClick={handleAddToCart}>Add to Cart</button>;
+  return <button onClick={() => trackEvent({ event: 'add_to_cart', productId: product.id })}>Add</button>;
 }
 ```
 
-Events are automatically gated by consent — if the user hasn't accepted analytics cookies, events are silently dropped.
-
-### Available Page Types
-
-`'home'`, `'pdp'`, `'lister'`, `'searchresults'`, `'category'`, `'wishlist'`, `'checkout|cart'`, `'checkout|delivery'`, `'checkout|paymentselection'`, `'thankyou'`, `'myhema'`, `'service'`, `'store'`, `'inspiration_landing'`, `'inspiration_hub'`, `'inspiration_blog'`, `'other'`
-
----
-
-## Search Integration
-
-To enable search in the header, implement server actions:
-
-```typescript
-// src/lib/search-actions.ts
-'use server';
-
-import { createSearchActions } from '@hema/omni-web-app-shell-core/server';
-import type { BusinessCommerceRepository } from '@hema/omni-web-app-shell-core/server';
-
-const repository: BusinessCommerceRepository = {
-  // Implement the 6 required methods with your API client
-};
-
-const actions = createSearchActions(repository);
-
-export const getInitialSearchInfo = actions.getInitialSearchInfo;
-export const getSearchSuggestions = actions.getSearchSuggestions;
-```
-
-Then pass to Shell:
-
-```typescript
-<Shell searchActions={{ getInitialSearchInfo, getSearchSuggestions }}>
-  {children}
-</Shell>
-```
-
----
-
-## API Client (Server-Side Only)
-
-The `@hema/omni-web-app-shell-api-client` package provides type-safe clients generated from OpenAPI specs:
-
-```typescript
-// Server component or server action only!
-import {
-  createAdapter,
-  createNewsletterClient,
-  BearerTokenAuthProvider,
-} from '@hema/omni-web-app-shell-api-client';
-
-const adapter = createAdapter({
-  baseUrl: process.env.HEMA_NEWSLETTER_BASE_URL,
-  authProvider: new BearerTokenAuthProvider(() => Promise.resolve(getAccessToken())),
-});
-
-const client = createNewsletterClient(adapter);
-const subscriptions = await client.newsletter.v1.newsletters.get({ ... });
-```
-
-> **Warning:** Never import `api-client` in client components — it requires server-side credentials.
-
----
-
-## Shell Component Tree
-
-The Shell renders this provider hierarchy:
-
-1. `ShellProvider` — Shell-specific React context
-2. `DataLayerInitializer` — Pushes initial GTM data layer
-3. `UsercentricsScript` — Consent banner (suppressed when `appConsent` provided)
-4. `GoogleTagManager` — GTM via `@next/third-parties`
-5. `I18nProvider` — Internationalization
-6. `ShellAnalytics` — Analytics with consent gating
-7. `Header` / `Footer` — Rendered when data is provided
-
----
-
-## Environment Variables
-
-```bash
-# .env.local
-NEXT_PUBLIC_GTM_ID=GTM-TZKLP7T
-```
-
----
-
-## Requirements
-
-- Node.js >= 22.0.0
-- React >= 18.0.0 (19.x recommended)
-- Next.js >= 14.0.0 (15.x recommended)
-- HDS components (`@hema/hds-components-react`)
-
----
-
 ## Further Reading
 
-- [Shell package README](https://github.com/HemaEcom/omni-web-app-shell-library/blob/main/library/packages/shell/README.md)
-- [Core package README](https://github.com/HemaEcom/omni-web-app-shell-library/blob/main/library/packages/core/README.md)
-- [Analytics package README](https://github.com/HemaEcom/omni-web-app-shell-library/blob/main/library/packages/analytics/README.md)
+- [Shell README](https://github.com/HemaEcom/omni-web-app-shell-library/blob/main/library/packages/shell/README.md)
+- [Core README](https://github.com/HemaEcom/omni-web-app-shell-library/blob/main/library/packages/core/README.md)
+- [Analytics README](https://github.com/HemaEcom/omni-web-app-shell-library/blob/main/library/packages/analytics/README.md)
 - [Example app](https://github.com/HemaEcom/omni-web-app-shell-library/tree/main/library/packages/examples/next/test-analytics)

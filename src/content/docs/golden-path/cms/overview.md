@@ -6,6 +6,8 @@ title: "CMS Overview — Sanity Composable CMS"
 > **Sanity version**: 5.x (React 19, Vite-based Studio)
 > **API version**: `2026-03-12`
 > **Studio version**: 1.29.0
+>
+> 📐 **Architecture Decisions:** [ADR-0009 — Use Sanity directly for editorial content](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) | [ADR-0002 — Using Sanity CMS for site configuration](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) | [ADR-0010 — CMS NOT to consume Bynder directly](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 
 ## What is the CMS?
 
