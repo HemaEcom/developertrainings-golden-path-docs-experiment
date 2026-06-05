@@ -47,10 +47,7 @@ export default defineConfig({
           label: 'Gateway',
           autogenerate: { directory: 'golden-path/gateway' },
         },
-        {
-          label: 'Libraries',
-          autogenerate: { directory: 'golden-path/libraries' },
-        },
+
         {
           label: 'CI/CD',
           autogenerate: { directory: 'golden-path/ci-cd' },

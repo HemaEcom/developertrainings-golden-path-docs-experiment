@@ -21,9 +21,12 @@ mfe: "Your MFE (Next.js)" {
 
   shell: "Web Shell" {
     style.fill: "#C8E6C9"
-    header: "Header"
-    footer: "Footer"
-    analytics: "Analytics"
+    header: "Header & Navigation"
+    footer: "Footer & Newsletter"
+    analytics: "Analytics & Consent"
+    geo: "Geo-Popup"
+    search: "Search"
+    session: "Session & Basket"
   }
 
   hds: "HDS (Tompouce)" {
@@ -45,6 +48,9 @@ mfe: "Your MFE (Next.js)" {
 ```
 
 ### 1. HEMA Design System (Tompouce/HDS)
+
+- 📖 **Storybook:** https://hema-design-system-dev.enterprise-dev-libraries.ui.hema.digital/
+- 💻 **Repo:** [HemaEcom/hema-design-system](https://github.com/HemaEcom/hema-design-system)
 
 ```bash
 cd src/
@@ -86,15 +92,35 @@ export function MyComponent() {
 }
 ```
 
-### 2. Web Shell (Header, Footer, Analytics)
+### 2. Web Shell (Shared Application Layer)
 
-The Shell provides the consistent HEMA layout across all MFEs. It lives in a **route group layout** (`[locale]/(shop)/layout.tsx`), NOT the root layout.
+The Web Shell is more than just a header and footer — it's the **shared application layer** that every MFE plugs into. It provides the consistent HEMA experience and cross-cutting concerns so individual MFEs don't have to reinvent them.
+
+**What the Shell provides:**
+
+| Capability | Description |
+|-----------|-------------|
+| Header & Navigation | Top bar, category menu, basket count, search |
+| Footer & Newsletter | Footer links, newsletter subscription form |
+| Analytics (GTM) | Google Tag Manager, data layer initialization, event tracking |
+| Consent Management | Usercentrics integration, GDPR-compliant consent gating |
+| Geo-Popup | Country detection, locale redirect suggestions |
+| Global Message Banner | Marketing/promotional banners from CMS |
+| Search | Initial search data + suggestions (via platform API) |
+| Session & Basket | Shared session, basket count across MFEs |
+| Error View | Shared error page component |
+| Scroll-to-top | Scroll button on long pages |
+| I18n Provider | Locale context and translations for shell UI |
+
+The Shell lives in a **route group layout** (`[locale]/(shop)/layout.tsx`), NOT the root layout.
 
 | Package | Purpose |
 |---------|---------|
-| `@hema/omni-web-app-shell-shell` | Main Shell component (header, footer, layout) |
-| `@hema/omni-web-app-shell-core` | Data fetching (getHeader, getFooter, getCategoryMenu) |
-| `@hema/omni-web-app-shell-analytics` | Analytics tracking, consent management |
+| `@hema/omni-web-app-shell-shell` | Main Shell component (all UI above) |
+| `@hema/omni-web-app-shell-core` | Data fetching (header, footer, menu, dictionary from Sanity) |
+| `@hema/omni-web-app-shell-analytics` | GTM event tracking, consent state, reporting adapters |
+| `@hema/omni-web-app-shell-platform-api` | Platform API client (search, session, basket count) |
+| `@hema/omni-web-app-shell-api-client` | Type-safe API clients (Newsletter, Products) via Kiota |
 
 ```bash
 npm install @hema/omni-web-app-shell-shell @hema/omni-web-app-shell-core @hema/omni-web-app-shell-analytics

@@ -10,7 +10,7 @@
 This guide walks you through creating a production-ready Next.js micro-frontend (MFE) at HEMA. By the end, you'll have a service with:
 
 - ✅ Next.js 15 with App Router and standalone output
-- ✅ CDK infrastructure (ECS Fargate + ALB + CloudFront)
+- ✅ CDK infrastructure (ECS Fargate + ALB + CloudFront, or OpenNext/Lambda for lighter MFEs)
 - ✅ CI/CD pipeline with CodePipeline
 - ✅ HEMA Design System (Tompouce/HDS)
 - ✅ Web Shell (header, footer, analytics)
@@ -206,6 +206,8 @@ export default withNextIntl(nextConfig);
 > - `serverActions.allowedOrigins` must include gateway dev domains AND production domains
 
 ### Create the Dockerfile
+
+> **Note:** This tutorial covers the ECS Fargate (Docker) path — the default for high-traffic MFEs. For lighter services, OpenNext (serverless/Lambda) is also available.
 
 There are two patterns in use. The **Content Frontend** uses BuildKit secrets for build-time env vars (needed for Sanity static generation). The **PDP** uses ARG placeholders since it fetches data at runtime.
 

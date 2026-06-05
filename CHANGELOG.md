@@ -12,6 +12,88 @@ Each entry follows:
 
 ---
 
+## [2026-06-05] - Remove dedicated Libraries section
+### What changed
+- Removed `src/content/docs/golden-path/libraries/` (web-shell-integration.md, hds-integration.md)
+- Removed "Libraries" sidebar entry from `astro.config.mjs`
+- Removed built `docs/golden-path/libraries/` output
+### Why
+- Web Shell and HDS are already covered in the Tutorial's "06 — Core Capabilities" section
+- Having a separate Libraries section was redundant; mentioning them in the capabilities context is sufficient for now
+### Gaps remaining
+- If libraries grow significantly or need standalone reference docs, consider re-adding as a dedicated section later
+
+---
+
+## [2026-06-05] - Reorder and improve Gateway section narrative
+### What changed
+- Set sidebar order: Gateway Registration (1) → Multi-Zone Config (2) → Federated Sitemaps (3)
+- Simplified Gateway Registration: removed RAM/cross-account details (implementation detail handled by CDK)
+- Simplified the "How It Works" diagram to focus on what developers interact with
+- Added narrative connectors between pages ("Next →", "← Previous")
+- Added note to Federated Sitemaps that it only applies to publicly indexable pages
+- Removed RAM from the checklist
+### Why
+- Gateway Registration is the most important concept — it should come first
+- RAM is an internal detail developers never have to think about
+- Federated Sitemaps is niche, should be last
+
+---
+
+## [2026-06-05] - Expand Web Shell documentation to reflect its full scope
+### What changed
+- Updated `src/content/docs/golden-path/tutorial/06-capabilities.md`:
+  - Renamed section from "Web Shell (Header, Footer, Analytics)" to "Web Shell (Shared Application Layer)"
+  - Added full capabilities table (geo-popup, consent, global banner, search, session, basket, error view, scroll-to-top)
+  - Updated d2 diagram to show all Shell responsibilities
+  - Added `platform-api` and `api-client` packages to the package list
+- Updated `src/content/docs/golden-path/libraries/web-shell-integration.md`:
+  - Rewrote "What Is the Web Shell?" to position it as the shared application layer
+  - Added capabilities table, expanded d2 diagram, updated packages table
+  - Added MFE component diagram image
+- Updated `sections/libraries/web-shell-integration.md` with same improvements
+- Copied `MFE_component-diagram.png` to `public/images/` for Starlight use
+### Why
+- The Shell has evolved well beyond header/footer/analytics — it now handles consent, geo-detection, search, session, global banners, and more
+- Documentation was underselling the Shell's role as the shared application layer
+### Sources used
+- MFE component diagram (`docs/MFE_component-diagram.png`)
+- `omni-web-app-shell-library` repo: Shell.tsx exports, platform-api exports, analytics exports
+
+---
+
+## [2026-06-05] - Add HDS Storybook and repo links to tutorial section 6
+### What changed
+- Added deployed Storybook URL and GitHub repo link to the HDS section in `06-capabilities.md`
+### Why
+- Developers need quick access to browse available components before integrating them
+
+---
+
+## [2026-06-05] - Clarify ECS Fargate vs OpenNext deployment models in tutorial
+### What changed
+- Updated `src/content/docs/golden-path/tutorial/01-overview.md`:
+  - Replaced single-line "Each MFE runs as a Docker container on ECS Fargate" with expanded explanation of both deployment models
+  - Updated checklist to mention both ECS Fargate and OpenNext/Lambda options
+- Updated `src/content/docs/golden-path/tutorial/04-nextjs-setup.md`:
+  - Added a callout note in the Dockerfile section clarifying that ECS is the default for heavy-traffic MFEs, with OpenNext as alternative for lighter services
+- Updated `tutorial.md` (root):
+  - Updated checklist to mention both deployment options
+  - Added deployment model clarification note before the Dockerfile section
+### Why
+- The documentation previously implied ECS Fargate was the only deployment model
+- Some MFEs (e.g., omni-web-myaccount-frontend) use OpenNext/Lambda for serverless deployment
+- New developers need to understand the decision criteria for choosing between models
+- ECS Fargate remains the recommended default for heavy, high-traffic frontend pages
+### Sources used
+- ADR-0005 (documented in `sections/adrs/adr-summary.md`) — ECS vs OpenNext decision
+- Existing knowledge of omni-web-myaccount-frontend using OpenNext pattern
+### Gaps remaining
+- Full OpenNext deployment tutorial/guide not yet written (documented pattern is ECS-only)
+- Infrastructure section (`sections/infrastructure/`) needs an OpenNext-specific page
+
+---
+
 ## [2026-06-02] - Reorder tutorial: Local Development before Capabilities and Deployment
 ### What changed
 - Moved Local Development from step 6 (last) to step 5 (right after Next.js setup)

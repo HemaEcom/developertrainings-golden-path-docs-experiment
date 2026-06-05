@@ -12,7 +12,7 @@ Ready to build a micro-frontend at HEMA? This tutorial takes you from an empty r
 By the end, you'll have a real, production-ready service with all the bells and whistles:
 
 - ✅ **Next.js 15+** with App Router and standalone Docker output
-- ✅ **AWS infrastructure** (ECS Fargate + ALB) managed entirely by CDK
+- ✅ **AWS infrastructure** (ECS Fargate + ALB or OpenNext/Lambda) managed entirely by CDK
 - ✅ **CI/CD pipeline** that deploys on every push to main
 - ✅ **HEMA Design System** for consistent, accessible UI
 - ✅ **Web Shell** wrapping your app with header, footer, and analytics
@@ -84,7 +84,9 @@ gateway.router -> sfcc: {
 }
 ```
 
-Each MFE runs as a Docker container on ECS Fargate, registers its routes with the Gateway, and shares the Web Shell and Design System with all other MFEs.
+Each MFE registers its routes with the Gateway and shares the Web Shell and Design System with all other MFEs.
+
+Most MFEs run as **Docker containers on ECS Fargate** — this is the default for high-traffic pages (content, PDP). For lighter or bursty-traffic services (e.g., account pages), there's also the **OpenNext (serverless/Lambda)** option. This tutorial follows the ECS Fargate path.
 
 ## Reference Implementations
 

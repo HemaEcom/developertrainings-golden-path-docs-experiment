@@ -19,34 +19,55 @@ Every HEMA micro-frontend (MFE) runs on AWS using a two-stack CDK architecture:
 
 ## Architecture Diagram
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        CI Stack (-ci)                            │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌───────────────┐  │
-│  │  Source   │→ │  Build   │→ │  Synth   │→ │    Deploy     │  │
-│  │ (GitHub)  │  │(npm, lint│  │(cdk synth│  │ (runtime-rt)  │  │
-│  │           │  │ test)    │  │          │  │               │  │
-│  └──────────┘  └──────────┘  └──────────┘  └───────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                                                      │
-                                                      ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     Runtime Stack (-rt)                          │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │              EcsNextJsBundle (L3 Construct)               │  │
-│  │  ┌─────────┐  ┌─────────┐  ┌──────────┐  ┌──────────┐  │  │
-│  │  │   ECS   │  │   ALB   │  │   VPC    │  │   RAM    │  │  │
-│  │  │ Fargate │← │  + TG   │← │  Origin  │  │  Share   │  │  │
-│  │  │ Service │  │         │  │          │  │          │  │  │
-│  │  └─────────┘  └─────────┘  └──────────┘  └──────────┘  │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                                                                 │
-│  ┌────────────────────┐  ┌────────────────────────────────┐   │
-│  │ GatewayRegistration │  │ AlertPublisher + Monitoring    │   │
-│  │ (routes, zones)     │  │ (CloudWatch alarms)            │   │
-│  └────────────────────┘  └────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
+```d2
+direction: down
+
+ci: "CI Stack (-ci)" {
+  style.fill: "#FFF3E0"
+
+  source: "Source (GitHub)" {shape: rectangle}
+  build: "Build (npm, lint, test)" {shape: rectangle}
+  synth: "Synth (cdk synth)" {shape: rectangle}
+  deploy: "Deploy (runtime-rt)" {shape: rectangle}
+
+  source -> build -> synth -> deploy
+}
+
+rt: "Runtime Stack (-rt)" {
+  style.fill: "#E3F2FD"
+
+  bundle: "EcsNextJsBundle (L3 Construct)" {
+    style.fill: "#C8E6C9"
+
+    ecs: "ECS Fargate Service" {shape: rectangle}
+    alb: "ALB + Target Group" {shape: rectangle}
+    vpc_origin: "VPC Origin" {shape: rectangle}
+
+    vpc_origin -> alb -> ecs
+  }
+
+  gateway_reg: "Gateway Registration" {
+    style.fill: "#BBDEFB"
+    shape: rectangle
+  }
+
+  monitoring: "AlertPublisher + CloudWatch" {
+    style.fill: "#FFF9C4"
+    shape: rectangle
+  }
+
+  bundle.vpc_origin -> gateway_reg: "registers routes"
+  bundle.ecs -> monitoring: "alarms"
+}
+
+ci.deploy -> rt: "deploys"
+
+cloudfront: "CloudFront (omni-web-gateway)" {
+  style.fill: "#E8EAF6"
+  shape: cloud
+}
+
+cloudfront -> rt.bundle.vpc_origin: "private connectivity"
 ```
 
 ---

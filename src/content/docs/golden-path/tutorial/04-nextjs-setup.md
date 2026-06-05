@@ -101,6 +101,10 @@ The app is deployed as a Docker container on ECS Fargate. The Dockerfile uses a 
 - **Builder stage** — Installs deps (including private `@hema/*` packages from CodeArtifact), builds Next.js
 - **Runner stage** — Copies only the standalone output (~50MB vs ~500MB with node_modules)
 
+:::note
+This is the ECS Fargate path (default for high-traffic MFEs). For lighter services, OpenNext (serverless/Lambda) is also available.
+:::
+
 There are two patterns in use:
 
 **Pattern A: Runtime data fetching (PDP-style)** — simpler, uses ARG placeholders:

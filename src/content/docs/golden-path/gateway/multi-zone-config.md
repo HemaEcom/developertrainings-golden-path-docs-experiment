@@ -1,5 +1,7 @@
 ---
 title: "Multi-Zone Next.js Configuration"
+sidebar:
+  order: 2
 ---
 
 
@@ -8,6 +10,8 @@ title: "Multi-Zone Next.js Configuration"
 > 📐 **Architecture Decisions:** [ADR-0016 — Multi-zone support](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) | [ADR-0017 — URL namespace structure](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 
 ---
+
+Once your MFE is [registered with the gateway](./gateway-registration), you need to configure Next.js to work correctly within the multi-zone architecture. This page covers the `next.config.ts` settings that make your assets, images, and routes work alongside other MFEs on the same domain.
 
 ## What Is Multi-Zone?
 
@@ -190,5 +194,6 @@ During local development (`npm run dev`), the zone config still works but isn't 
 
 ## Further Reading
 
-- [Gateway Registration Guide](./gateway-registration.md) — How routes are registered with the gateway
-- [Docker/Standalone Build](../infrastructure/docker-standalone.md) — Why `output: 'standalone'` is required
+- **← Previous:** [Gateway Registration](./gateway-registration) — How routes are registered with the gateway
+- **Next →** [Federated Sitemaps](./federated-sitemaps) — How MFEs contribute SEO sitemaps
+- [Docker/Standalone Build](../infrastructure/docker-standalone) — Why `output: 'standalone'` is required

@@ -1,5 +1,7 @@
 ---
-title: "Gateway Registration Guide"
+title: "Gateway Registration"
+sidebar:
+  order: 1
 ---
 
 
@@ -14,7 +16,9 @@ title: "Gateway Registration Guide"
 
 ## What Is the Gateway?
 
-The **Omni Web Gateway** is a CloudFront distribution that serves as the single entry point for all HEMA web traffic. It routes requests to the correct micro-frontend (MFE) based on URL path patterns.
+The **Omni Web Gateway** is a CloudFront distribution that serves as the single entry point for all HEMA web traffic (`hema.nl` and `hema.com`). It routes requests to the correct micro-frontend based on URL path patterns.
+
+**Without gateway registration, your MFE will never receive traffic.** This is the first thing you need to understand when launching a new service.
 
 ```d2
 direction: right
@@ -60,72 +64,49 @@ Each MFE **registers its routes** with the gateway during CDK deployment. The ga
 
 ---
 
-## How It Works (High Level)
+## How It Works
 
 ```d2
 direction: down
 
-mfe_account: Your MFE AWS Account {
+deploy: "Your CDK Deploy" {
   style.fill: "#E3F2FD"
-
-  ecs: ECS Service {
-    shape: rectangle
-  }
-  alb: ALB {
-    shape: rectangle
-  }
-  vpc_origin: VPC Origin {
-    shape: hexagon
-  }
-  ram: RAM Resource Share {
-    shape: diamond
-  }
-  registration: GatewayRegistration {
-    shape: rectangle
-    style.fill: "#C8E6C9"
-    label: "GatewayRegistration\n(CDK Construct)"
-  }
-
-  ecs -> alb: health checks
-  alb -> vpc_origin: private link
-  vpc_origin -> ram: shares access
+  shape: rectangle
 }
 
-gateway_account: Gateway AWS Account {
+gateway_api: "Gateway Management API" {
   style.fill: "#FFF3E0"
-
-  api: Gateway Management API {
-    shape: rectangle
-  }
-  kvs: CloudFront KVS {
-    shape: cylinder
-  }
-  cf: CloudFront Distribution {
-    shape: cloud
-  }
-  routing_fn: Routing Function {
-    shape: hexagon
-  }
-
-  api -> kvs: "updates routes"
-  cf -> routing_fn: "evaluates request"
+  shape: rectangle
 }
 
-mfe_account.ram -> gateway_account.cf: "cross-account\nVPC Origin access"
-mfe_account.registration -> gateway_account.api: "registers routes\n+ VPC Origin"
-gateway_account.routing_fn -> mfe_account.vpc_origin: "routes traffic"
+kvs: "CloudFront KVS" {
+  style.fill: "#FFF9C4"
+  shape: cylinder
+}
+
+routing_fn: "CloudFront Routing Function" {
+  style.fill: "#C8E6C9"
+  shape: hexagon
+}
+
+your_origin: "Your VPC Origin (ECS/ALB)" {
+  style.fill: "#E8F5E9"
+  shape: rectangle
+}
+
+deploy -> gateway_api: "1. registers routes + origin"
+gateway_api -> kvs: "2. updates route table"
+routing_fn -> kvs: "3. looks up path"
+routing_fn -> your_origin: "4. routes matching traffic"
 ```
 
 **The flow:**
 
-1. Your runtime stack deploys an **ECS service** behind an **ALB** with a **VPC Origin**
-2. The VPC Origin is shared with the gateway account via **RAM Resource Share**
-3. Your stack calls the **GatewayRegistration** construct, which:
-   - Registers your routes (paths) with the gateway management API
-   - Associates your VPC Origin as the target for those routes
-   - Creates preview URLs for testing
-4. The gateway management API updates the CloudFront KVS with your route entries
-5. The CloudFront routing function starts directing matching traffic to your origin
+1. Your runtime stack deploys ECS + ALB + VPC Origin
+2. The `GatewayRegistration` CDK construct calls the gateway API with your routes and origin
+3. The gateway API updates the CloudFront Key-Value Store with your route entries
+4. On every request, the routing function looks up the path and directs traffic to the matching origin
+5. Unmatched paths fall through to SFCC (legacy default)
 
 ---
 
@@ -260,16 +241,7 @@ const gateway = new GatewayRegistration(this, 'GatewayRegistration', {
   clientSecret: '{{resolve:secretsmanager:...}}',
   zones,
 });
-
-// 5. Ensure RAM share is created before registration
-if (NextJsEcs.resourceShare) {
-  gateway.node.addDependency(NextJsEcs.resourceShare);
-}
 ```
-
-### Dependency Order
-
-The RAM resource share **must** exist before `GatewayRegistration` runs, and must be deleted **after** it. The gateway's CloudFront distribution sync Lambda needs cross-account `cloudfront:GetVpcOrigin` permission (granted by the RAM share) both when attaching and deregistering origins.
 
 ---
 
@@ -364,15 +336,14 @@ The `assetPrefix` in `next.config.ts` must match this zone prefix. See [Multi-Zo
 1. ☐ Add gateway management library packages to root `package.json`
 2. ☐ Create `lib/runtime/gateway-routes-config.json` with your routes
 3. ☐ Add `GatewayRegistration` construct to your runtime stack
-4. ☐ Ensure RAM resource share dependency is set
-5. ☐ Set `rolloutPercentage` (start at 0 or low for gradual rollout)
-6. ☐ Configure `assetPrefix` in `next.config.ts` to match your zone prefix
-7. ☐ Verify preview URLs work after first deployment
+4. ☐ Set `rolloutPercentage` (start at 0 or low for gradual rollout)
+5. ☐ Configure `assetPrefix` in `next.config.ts` to match your zone prefix (see [Multi-Zone Config](./multi-zone-config))
+6. ☐ Verify preview URLs work after first deployment
 
 ---
 
 ## Further Reading
 
-- [Multi-Zone Configuration](./multi-zone-config.md) — next.config.ts zone setup
-- [CDK Infrastructure Guide](../infrastructure/cdk-infrastructure.md) — Full stack architecture
-- [Gateway routing flows](https://github.com/HemaEcom/omni-web-gateway/blob/main/docs/routing-flows.md) — Detailed routing examples
+- **Next →** [Multi-Zone Configuration](./multi-zone-config) — How to configure `next.config.ts` for the zone architecture
+- [CDK Infrastructure Guide](../infrastructure/cdk-infrastructure) — Full stack architecture
+- [Federated Sitemaps](./federated-sitemaps) — SEO: how MFEs contribute sitemaps

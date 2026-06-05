@@ -1,10 +1,16 @@
 ---
 title: "Federated Sitemaps"
+sidebar:
+  order: 3
 ---
 
 
 > **ADR**: Federated Sitemap Architecture
 > **Source**: `omni-web-content-frontend/src/app/sitemap-index/`, `omni-web-gateway` (sitemap assembly)
+
+:::note
+This only applies if your MFE serves **publicly indexable pages** (not behind login). If your service is account-only, you can skip this.
+:::
 
 ## Overview
 
