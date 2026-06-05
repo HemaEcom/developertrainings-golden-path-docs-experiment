@@ -1,58 +1,66 @@
 ---
-title: "Session Sharing — SFCC & Next.js Coexistence"
+title: "Session Sharing"
+sidebar:
+  order: 4
 ---
 
+> 📐 **ADR:** [ADR-0004 — Session sharing between SFCC and Next.js](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6000803842) (In Progress)
 
-> **ADR**: HEM100-ADR-0004 (In Progress)
-> **Status**: Active during the SFCC → headless transition
+:::note[Transition Pattern]
+This describes how sessions work during the SFCC → headless migration. As SFCC is phased out, authentication will move to a dedicated identity service. The Web Shell abstracts this so MFE teams won't need code changes.
+:::
 
-## Why This Matters
+## Why This Exists
 
-HEMA is migrating from SFCC to Next.js MFEs over a multi-year period. During this transition, users navigate between SFCC pages and Next.js pages **on the same domain** (hema.nl / hema.com). Session state must be seamless — a user who logs in on SFCC must appear logged in on Next.js pages, and vice versa.
-
-## What's Shared
-
-| State | Where It Lives | How MFEs Access It |
-|-------|---------------|-------------------|
-| Authentication (logged in/out) | Cookies on `.hema.nl` / `.hema.com` | Read cookies server-side (SSR) or via Web Shell |
-| Cart context | SFCC Commerce API | Web Shell `api-client` package |
-| User identity | Session cookie | Validated per request |
+Users navigate between SFCC pages and Next.js MFEs **on the same domain**. Session state must be seamless — logged in on SFCC means logged in on Next.js pages.
 
 ## How It Works
 
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  SFCC Pages  │     │  CloudFront  │     │  Next.js MFE │
-│              │◄───▶│  (Gateway)   │◄───▶│              │
-│  Sets auth   │     │  Same domain │     │  Reads auth  │
-│  cookies     │     │  cookies     │     │  cookies     │
-└──────────────┘     └──────────────┘     └──────────────┘
-       │                                          │
-       │         Shared cookies on domain         │
-       └──────────────────────────────────────────┘
+```d2
+direction: down
+
+gateway: "CloudFront Gateway\n(same domain: hema.nl)" {
+  style.fill: "#FFF9C4"
+}
+
+sfcc: "SFCC Pages\n(sets auth cookies)" {
+  style.fill: "#FFCCBC"
+}
+
+mfe: "Next.js MFE\n(reads auth cookies)" {
+  style.fill: "#E3F2FD"
+}
+
+cookies: "Shared cookies\n(.hema.nl / .hema.com)" {
+  style.fill: "#E8F5E9"
+}
+
+gateway -> sfcc
+gateway -> mfe
+sfcc -> cookies: "sets"
+mfe -> cookies: "reads"
 ```
 
-Key mechanism: **Same-domain cookies**. Because SFCC and Next.js MFEs are served from the same domain (via CloudFront gateway), cookies set by SFCC are readable by Next.js and vice versa.
+Because SFCC and MFEs are served from the same domain (via the CloudFront gateway), cookies set by SFCC are readable by Next.js and vice versa.
+
+## What's Shared
+
+| State | Where It Lives | How MFEs Access |
+|-------|---------------|-----------------|
+| Authentication | Cookies on `.hema.nl` / `.hema.com` | Read server-side (RSC) or via Web Shell |
+| Cart context | SFCC Commerce API | Web Shell `api-client` package |
+| User identity | Session cookie | Validated per request |
 
 ## What MFE Developers Need to Know
 
-1. **Don't implement your own auth** — Use the Web Shell's session handling. The `@hema/omni-web-app-shell-core` package provides user context.
+1. **Don't implement your own auth** — Use the Web Shell's session handling (`@hema/omni-web-app-shell-core`)
+2. **Cart operations go through Commerce API** — Use `@hema/omni-web-app-shell-api-client`
+3. **Cookies are httpOnly + secure** — Can't read auth cookies from client JS; use server-side
+4. **Cookies flow through the gateway** — CloudFront passes them to your origin during SSR
+5. **Shell header handles UI state** — Cart count, user name, login/logout are all managed by Web Shell
 
-2. **Cart operations go through Commerce API** — Use `@hema/omni-web-app-shell-api-client` for cart add/remove/count. Don't call SFCC directly.
+## Security
 
-3. **Cookies are httpOnly + secure** — You cannot read auth cookies from client-side JavaScript. Use server-side (RSC or API routes) to check auth state.
-
-4. **Session cookies flow through the gateway** — CloudFront passes cookies to your origin. Your MFE receives them in the request headers during SSR.
-
-5. **The Shell header handles UI state** — Cart count, user name, login/logout links are all managed by the Web Shell header component. You don't need to implement these.
-
-## Security Requirements
-
-- All auth cookies use `httpOnly`, `secure`, `sameSite` attributes
-- Tokens are validated on each request (not just trusted from cookie)
-- Tokens have expiry and refresh mechanisms
-- No sensitive data exposed in client-accessible cookies
-
-## Future Direction
-
-As SFCC is phased out, authentication will move to a dedicated identity service. The cookie-based session sharing is a **transition pattern** — it works because everything is on the same domain. The Web Shell abstracts this so MFE teams won't need to change their code when the auth backend changes.
+- All auth cookies: `httpOnly`, `secure`, `sameSite`
+- Tokens validated on each request (not just trusted from cookie)
+- No sensitive data in client-accessible cookies

@@ -1,23 +1,26 @@
 ---
-title: "MFE Integration — Consuming CMS Data in Next.js"
+title: "MFE Integration"
+sidebar:
+  order: 3
 ---
 
-
 > **Source**: `omni-web-content-frontend/src/repositories/sanity/`
+>
+> 📐 **ADR:** [ADR-0009 — Use Sanity directly for editorial content](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6232047668) — Decision: MFEs query Sanity directly via GROQ (no BFF layer for content).
 
-## Overview
-
-MFEs consume Sanity CMS data using the **Repository Pattern** with GROQ queries. The integration uses `next-sanity` for client setup and `defineLive` for real-time preview support.
+:::note[Current State]
+The Content MFE (`omni-web-content-frontend`) has the most complete Sanity integration. The patterns described here are extracted from that implementation and serve as the reference for other MFEs.
+:::
 
 ## Setup
 
-### 1. Install Dependencies
+### Dependencies
 
 ```bash
 npm install next-sanity @sanity/client @sanity/preview-url-secret
 ```
 
-### 2. Environment Variables
+### Environment Variables
 
 ```env
 # Required
@@ -32,7 +35,7 @@ NEXT_PUBLIC_REQUEST_TAG_PREFIX=omni-web-content
 SANITY_API_READ_TOKEN=<read-token>
 ```
 
-### 3. Client Configuration
+### Client Configuration
 
 ```typescript
 // src/repositories/sanity/client.ts
@@ -45,20 +48,19 @@ export const baseClient = createClient({
   perspective: 'published',
   token,
   useCdn: true,
-  stega: {
-    studioUrl, // Enables click-to-edit in preview mode
-  },
+  stega: { studioUrl },
   requestTagPrefix: createRequestTag(requestTagPrefix),
 });
 ```
 
-Key settings:
-- `perspective: 'published'` — Only published content in production
-- `useCdn: true` — CDN-cached responses for performance
-- `stega.studioUrl` — Enables visual editing overlays in preview mode
-- `requestTagPrefix` — Tags requests for monitoring/debugging in Sanity dashboard
+| Setting | Value | Why |
+|---------|-------|-----|
+| `perspective` | `'published'` | Only published content in production |
+| `useCdn` | `true` | CDN-cached responses for performance |
+| `stega.studioUrl` | Studio URL | Enables click-to-edit in preview mode |
+| `requestTagPrefix` | Service name | Tags requests for monitoring in Sanity dashboard |
 
-### 4. Live Preview Client
+### Live Preview Client
 
 ```typescript
 // src/repositories/sanity/preview/live.ts
@@ -71,39 +73,25 @@ export const { sanityFetch, SanityLive } = defineLive({
 });
 ```
 
-The `sanityFetch` function automatically handles:
-- Draft content when draft mode is enabled
-- Real-time updates via Sanity's Content Lake listener
-- Perspective switching (published, drafts, releases)
+`sanityFetch` automatically handles draft content when draft mode is enabled, real-time updates via Content Lake listener, and perspective switching.
 
 ## Repository Pattern
 
-Each domain has its own repository class implementing a shared interface:
+Each domain has a repository class:
 
 ```typescript
 // src/repositories/sanity/page-data-repository.ts
 export default class SanityPageDataRepository implements PageRepository {
-  private readonly client: RequestClient;
-
-  constructor(requestClient: RequestClient = client) {
-    this.client = requestClient;
-  }
-
   async getPageDataBySlug(slug: string, locale: string): Promise<Page | null> {
     const [lang, country] = locale.split('-');
     return await this.client.fetch(PAGE_QUERY, { slug, lang, country });
   }
-
-  async getRootPages(locale: string): Promise<Page[]> { ... }
-  async getPageParentBySlug(slug: string, locale: string) { ... }
-  async getSeoMetaDataBySlug(slug: string, locale: string) { ... }
-  async getAlternatesBySlug(slug: string, locale: string) { ... }
 }
 ```
 
 ### Query Parameters Convention
 
-All GROQ queries use these standard parameters:
+All GROQ queries use:
 - `$lang` — Language code (`nl`, `fr`, `de`)
 - `$country` — Country code lowercase (`nl`, `be`, `fr`, `de`)
 - `$slug` — Page slug
@@ -123,39 +111,24 @@ const [lang, country] = locale.split('-'); // "nl-nl" → ["nl", "nl"]
   _type == 'homePage' => { ...homePageProjection },
   _type == 'flexibleContentPage' => { ...flexibleProjection },
   _type == 'inspirationalBlog' => { ...blogProjection },
-  _type == 'inspirationalCategory' => { ...categoryProjection },
-  _type == 'inspirationalLanding' => { ...landingProjection },
 }
 ```
 
-Key patterns:
-- **Country filtering**: `($country == '' || lower(country) == $country)` — allows empty country for cross-country queries
+- **Country filtering**: `($country == '' || lower(country) == $country)`
 - **Translated slug lookup**: `slug[$lang].current == $slug`
-- **Type-based projection**: Different projections per `_type`
+- **Type-based projection**: Different shapes per `_type`
 
 ### Component Resolution (selectComponent)
-
-The flexible component array resolves references:
 
 ```groq
 selectComponent[$lang][] -> {
   _type,
-  // Each component type has its own projection
   _type == 'carousel' => { ...carouselProjection },
   _type == 'heroBlock' => { ...heroProjection },
-  ...
 }
 ```
 
-### Microcopy (Translations)
-
-```groq
-*[_type == "microcopy"][0] {
-  entries[] { title, key, value }
-}
-```
-
-Fetched with `unstable_cache` and 5-minute revalidation:
+### Microcopy (UI Translations)
 
 ```typescript
 export const fetchMicrocopy = async (locale: string) => {
@@ -177,20 +150,36 @@ export const fetchMicrocopy = async (locale: string) => {
   *[slug[$lang].current == $slug][0]._id in translations[].value._ref
 ][0] {
   "translations": translations[]{ "_key": _key, "slug": value->slug },
-  "defaultTranslation": defaultTranslation->{ "slug": slug, "country": country },
 }
 ```
 
 ## Page Rendering Flow
 
-```
-1. Request: GET /nl-nl/inspiratie/kerst
-2. Next.js route: src/app/[locale]/[...slugs]/page.tsx
-3. PageService.getPageData("inspiratie/kerst", "nl-nl")
-4. SanityPageDataRepository.getPageDataBySlug(slug, locale)
-5. GROQ query → Sanity Content Lake
-6. Returns page data with type + resolved components
-7. PageTemplateResolver renders the correct template
+```d2
+direction: down
+
+request: "GET /nl-nl/inspiratie/kerst" {
+  style.fill: "#FFF9C4"
+}
+
+route: "Next.js route\n[locale]/[...slugs]/page.tsx" {
+  style.fill: "#E3F2FD"
+}
+
+repo: "SanityPageDataRepository\n→ GROQ query" {
+  style.fill: "#E8F5E9"
+}
+
+sanity: "Sanity Content Lake" {
+  style.fill: "#F3E5F5"
+}
+
+render: "PageTemplateResolver\n→ renders correct template" {
+  style.fill: "#E3F2FD"
+}
+
+request -> route -> repo -> sanity
+sanity -> render: "page data + components"
 ```
 
 ```typescript
@@ -199,9 +188,7 @@ export default async function Page({ params }) {
   const { slugs, locale } = await params;
   const path = slugs.join('/');
   const pageType = (await pageService.getPageData(path, locale))?.type;
-
   if (!pageType) notFound();
-
   return <PageTemplateResolver pageType={pageType} path={path} locale={locale} />;
 }
 ```
@@ -212,21 +199,13 @@ export default async function Page({ params }) {
 |-----------|-------|--------------|
 | Page content | Next.js ISR | 300s (5 min) |
 | Microcopy | `unstable_cache` | 300s (5 min) |
-| Sitemap | Route handler | On-demand |
+| Sitemap | Route handler | 3600s (1 hour) |
 | Draft mode | No cache | Real-time |
 
-## Adding a New Content Type to Your MFE
-
-1. **Define the GROQ query** in `src/repositories/sanity/queries/`
-2. **Create a repository method** in the appropriate repository class
-3. **Create a service method** that calls the repository
-4. **Create the page/component** that renders the data
-5. **Add TypeGen types** — run `npx sanity typegen generate` in the CMS repo to get types
-
-## Environment-Specific Behavior
+## Environment Behavior
 
 | Environment | `perspective` | `useCdn` | Draft Mode |
 |-------------|--------------|----------|------------|
-| Production | `published` | `true` | Available via secret URL |
+| Production | `published` | `true` | Via secret URL |
 | Preview | `drafts` | `false` | Enabled |
 | Development | `published` | `true` | Available locally |

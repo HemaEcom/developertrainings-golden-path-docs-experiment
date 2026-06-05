@@ -1,59 +1,65 @@
 ---
-title: "Kong API Authentication"
+title: "Kong Authentication"
+sidebar:
+  order: 2
 ---
 
-
-> **ADR**: [HEM100-ADR-0015 — Auth with API management](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 > **Source**: `omni-web-catalog-pdp/src/services/auth/kong-authenticator.ts`
-
-## Overview
-
-MFEs that call backend services (PODS, Newsletter, Commerce) authenticate via **Kong API Gateway** using OAuth2 client credentials. The token is managed at runtime with proactive refresh — the service token is never loaded directly into the app's public code.
-
-## Architecture
-
-```
-┌─────────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  MFE (ECS)      │────▶│  Kong API    │────▶│  Backend Service │
-│                 │     │  Gateway     │     │  (PODS, etc.)    │
-│  KongAuth →     │     │              │     │                  │
-│  Bearer token   │     │  Validates   │     │                  │
-└─────────────────┘     └──────────────┘     └─────────────────┘
-         │
-         │ Reads AUTH_SECRET from
-         │ Secrets Manager (injected as ECS secret)
-         ▼
-┌─────────────────┐
-│  AWS Secrets    │
-│  Manager        │
-│  /hema/global/  │
-│  auth           │
-└─────────────────┘
-```
+>
+> 📐 **ADR:** [ADR-0015 — Auth with API management](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) — Decision: service credentials stored and rotated independently, never loaded directly into the app.
 
 ## How It Works
 
-1. **Credentials** are stored in Secrets Manager (`/hema/global/auth`) as JSON: `{ clientId, clientSecret, baseUrl }`
-2. **ECS injects** the secret as `AUTH_SECRET` environment variable at container start
-3. **KongAuthenticator** parses credentials on first use, fetches an OAuth token
-4. **Token is cached** in-memory with proactive refresh before expiry
-5. **Apollo Client** (or REST client) uses the token as `Authorization: Bearer <token>`
+```d2
+direction: down
+
+secrets: "AWS Secrets Manager\n/hema/global/auth" {
+  style.fill: "#FFF9C4"
+}
+
+ecs: "ECS Task\n(injects AUTH_SECRET env var)" {
+  style.fill: "#E3F2FD"
+}
+
+auth: "KongAuthenticator\n(in-memory token cache)" {
+  style.fill: "#E8F5E9"
+}
+
+kong: "Kong API Gateway\n(validates Bearer token)" {
+  style.fill: "#FFF9C4"
+}
+
+backend: "Backend Service\n(PODS, Newsletter, etc.)" {
+  style.fill: "#F3E5F5"
+}
+
+secrets -> ecs: "credentials JSON"
+ecs -> auth: "AUTH_SECRET"
+auth -> kong: "Authorization: Bearer <token>"
+kong -> backend: "authenticated request"
+```
+
+## Flow
+
+1. Credentials stored in Secrets Manager as JSON: `{ clientId, clientSecret, baseUrl }`
+2. ECS injects the secret as `AUTH_SECRET` environment variable at container start
+3. `KongAuthenticator` parses credentials on first use, fetches an OAuth token
+4. Token is cached in-memory with proactive refresh before expiry
+5. Apollo Client (or REST) uses the token as `Authorization: Bearer <token>`
 
 ## Implementation
 
 ### Authenticator Interface
 
 ```typescript
-// src/services/auth/authenticator.ts
 export interface Authenticator {
   getToken(): Promise<string>;
 }
 ```
 
-### KongAuthenticator (Reference Implementation)
+### KongAuthenticator
 
 ```typescript
-// src/services/auth/kong-authenticator.ts
 export class KongAuthenticator implements Authenticator {
   private static credentials: KongCredentials | null = null;
   private static tokenCache: TokenData | null = null;
@@ -67,60 +73,47 @@ export class KongAuthenticator implements Authenticator {
 }
 ```
 
-Key behaviors:
-- **Singleton credentials**: Parsed once from `AUTH_SECRET`, reused for process lifetime
-- **Proactive refresh**: Refreshes token before expiry (configurable threshold, default 5 min)
-- **Deduplication**: Only one refresh request in-flight at a time
-- **Graceful degradation**: If proactive refresh fails, continues using current token until it actually expires
-
-### CDK Setup
-
-```typescript
-// lib/runtime/runtime-stack.ts
-ecsSecrets: {
-  AUTH_SECRET: ecs.Secret.fromSecretsManager(params.resolved.securityCredentials),
-},
-```
+**Behaviors:**
+- Singleton credentials — parsed once, reused for process lifetime
+- Proactive refresh — refreshes before expiry (default 5 min threshold)
+- Deduplication — only one refresh request in-flight at a time
+- Graceful degradation — if refresh fails, continues with current token until it expires
 
 ### Usage with Apollo Client
 
 ```typescript
-// src/clients/graphql/apollo-client-rsc.ts
 export function createApolloQueryFn(authenticator: Authenticator) {
   const authLink = setContext(async (_, { headers }) => {
     const token = await authenticator.getToken();
-    return {
-      headers: { ...headers, authorization: `Bearer ${token}` },
-    };
+    return { headers: { ...headers, authorization: `Bearer ${token}` } };
   });
 
   const { query } = registerApolloClient(() => {
     const httpLink = new HttpLink({ uri: podsEndpoint });
     return new ApolloClient({ link: from([authLink, httpLink]), cache: new InMemoryCache() });
   });
-
   return query;
 }
 ```
 
-### Usage with REST Client
+### Usage with REST
 
 ```typescript
 const authenticator = new KongAuthenticator();
-const headers = await authenticator.getAuthHeaders();
-// Headers: { Authorization: "Bearer <token>", Content-Type: "application/json" }
-
-const response = await fetch(`${BASE_API_URL}/endpoint`, { headers });
+const token = await authenticator.getToken();
+const response = await fetch(`${BASE_API_URL}/endpoint`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
 ```
 
 ## Adding Kong Auth to a New MFE
 
-1. **Add the secret to your runtime parameters**:
+1. **Add the secret to runtime parameters:**
    ```typescript
    securityCredentials: this.getSecret('SecurityCredentials', `${globalPath}/auth`),
    ```
 
-2. **Inject as ECS secret**:
+2. **Inject as ECS secret:**
    ```typescript
    ecsSecrets: {
      AUTH_SECRET: ecs.Secret.fromSecretsManager(params.resolved.securityCredentials),
@@ -137,6 +130,6 @@ const response = await fetch(`${BASE_API_URL}/endpoint`, { headers });
 ## Security Properties
 
 - Service token never exposed to client-side code (`server-only` import)
-- Credentials rotated via Secrets Manager (no app restart needed for secret rotation)
+- Credentials rotated via Secrets Manager (no app restart needed)
 - Token cached in-memory only (not persisted to disk)
 - Failed refresh doesn't crash the app (graceful degradation)

@@ -1,42 +1,49 @@
 ---
-title: "Architecture Decision Records — Summary & Golden Path Alignment"
+title: "Architecture Decision Records"
+sidebar:
+  order: 1
 ---
 
-
-> **Source**: `ezex-handbook/confluence/hema-architecture/adrs/`
-> **Total ADRs**: 20 numbered + ~10 unnumbered drafts
+> **Confluence**: [ADRs page (all decisions)](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
 
 ## ADR Index
 
-| # | Title | Status | Golden Path Coverage |
-|---|-------|--------|---------------------|
-| 0001 | Build a header/footer component | DRAFT | ✅ Covered in `web-shell-integration.md` |
-| 0002 | Using Sanity CMS for site configuration | IN PROGRESS | ✅ Covered in `cms/content-modeling.md` (Shell Configuration) |
-| 0003 | Teams SHOULD use Next.js | DECIDED | ✅ Covered in tutorial (Part 3) |
-| 0004 | Session sharing between SFCC and Next.js | IN PROGRESS | ✅ Covered in `data-apis/session-sharing.md` |
-| 0005 | Use OpenNext for account pages | DECIDED | ✅ Both approaches valid — see below |
-| 0006 | Interactive behavior in React component library | DECIDED | ✅ Covered in `hds-integration.md` |
-| 0007 | Guidelines on client components in design system | DECIDED | ✅ Implicitly covered |
-| 0008 | Use PODS to get product data | DECIDED | ✅ Covered in `data-apis/overview.md` + `data-apis/pods-integration.md` |
-| 0009 | Use Sanity directly for editorial content | DECIDED | ✅ Covered in `cms/mfe-integration.md` |
-| 0010 | CMS NOT to consume Bynder directly | DECIDED | ✅ Covered in `cms/dam-sync.md` |
-| 0011 | Use Newsletter API via Kong | DECIDED | ⚠️ Not in Golden Path — domain-specific |
-| 0012 | Server actions vs API routes | DECIDED | ✅ Covered in `onboarding/server-actions-vs-api-routes.md` |
-| 0013 | Use CloudFront Functions for gateway router | DECIDED | ✅ Covered in `gateway/gateway-registration.md` |
-| 0014 | CI/CD strategy | IN PROGRESS | ✅ Covered in `ci-cd/` section |
-| 0015 | Auth with API management (Kong) | DECIDED | ✅ Covered in `data-apis/kong-authentication.md` |
-| 0016 | Multi-zone support | IN PROGRESS | ✅ Covered in `gateway/multi-zone-config.md` |
-| 0017 | URL namespace structure | DECIDED | ✅ Covered in `gateway/multi-zone-config.md` |
-| 0018 | Release flow for Tompouce (HDS) | DECIDED | ✅ Covered in `hds-integration.md` |
-| 0019 | Analytics integration | DONE | ✅ Covered in `web-shell-integration.md` (analytics package) |
-| 0020 | MFE protection at edge | — | ✅ Covered in `security/security-headers-waf.md` |
-| — | Federated sitemap architecture | — | ✅ Covered in `gateway/federated-sitemaps.md` |
-| — | Consistent logging in MFEs | — | ✅ Covered in `monitoring/observability.md` |
-| — | CloudFront flat rate pricing | — | N/A (cost decision, not dev-facing) |
-| — | Bazaarvoice integration | — | N/A (domain-specific) |
-| — | Domain-based locale routing | — | ✅ Covered in `i18n-setup.md` |
-| — | Visual regression testing for Tompouce | — | ⚠️ Not in Golden Path |
-| — | Accessibility testing for Tompouce | — | ⚠️ Not in Golden Path |
+| # | Title | Status | Link |
+|---|-------|--------|------|
+| 0001 | Build a header/footer component | DRAFT | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0002 | Using Sanity CMS for site configuration | IN PROGRESS | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0003 | Teams SHOULD use Next.js | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0004 | Session sharing between SFCC and Next.js | IN PROGRESS | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6000803842) |
+| 0005 | Use OpenNext for account pages | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6062833665) |
+| 0006 | Interactive behavior in React component library | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0007 | Guidelines on client components in design system | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5639995418) |
+| 0008 | Use PODS to get product data | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6223953921) |
+| 0009 | Use Sanity directly for editorial content | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6232047668) |
+| 0010 | CMS NOT to consume Bynder directly | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6232604673) |
+| 0011 | Use Newsletter API via Kong | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0012 | Server actions vs API routes | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0013 | Use CloudFront Functions for gateway router | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0014 | CI/CD strategy | IN PROGRESS | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0015 | Auth with API management (Kong) | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0016 | Multi-zone support | IN PROGRESS | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0017 | URL namespace structure | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0018 | Release flow for Tompouce (HDS) | DECIDED | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0019 | Analytics integration | DONE | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| 0020 | MFE protection at edge | — | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+
+### Unnumbered / Draft ADRs
+
+| Title | Link |
+|-------|------|
+| Federated sitemap architecture | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| Consistent logging in MFEs | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| Domain-based locale routing | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| Visual regression testing for Tompouce | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+| Accessibility testing for Tompouce | [Confluence](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) |
+
+:::note
+Some ADRs link to the parent ADR page because individual page IDs haven't been mapped yet. All ADRs are accessible from the [ADRs parent page](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786).
+:::
 
 ---
 

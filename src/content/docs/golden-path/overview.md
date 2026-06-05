@@ -61,7 +61,7 @@ TypeScript, ESLint, Prettier, Vitest, WCAG 2.0 AA accessibility, security header
 ## How It All Fits Together
 
 ```d2
-direction: right
+direction: down
 
 customer: Customer {
   shape: person
@@ -74,34 +74,36 @@ gateway: CloudFront Gateway {
   }
 }
 
-sfcc: SFCC (Legacy) {
-  shape: rectangle
-  style.fill: "#FFEBEE"
-  style.stroke-dash: 3
-}
+zones: "" {
+  style.stroke: "transparent"
+  style.fill: "transparent"
 
-content: Content MFE {
-  shape: rectangle
-  style.fill: "#E8F5E9"
-  ecs: ECS Fargate
-  next: Next.js App
-}
+  sfcc: SFCC (Legacy) {
+    shape: rectangle
+    style.fill: "#FFEBEE"
+    style.stroke-dash: 3
+  }
 
-pdp: PDP MFE {
-  shape: rectangle
-  style.fill: "#E3F2FD"
-  ecs: ECS Fargate
-  next: Next.js App
-}
+  content: Content MFE {
+    shape: rectangle
+    style.fill: "#E8F5E9"
+    next: "Next.js on ECS Fargate"
+  }
 
-account: Account MFE {
-  shape: rectangle
-  style.fill: "#FFF3E0"
-  lambda: Lambda
+  pdp: PDP MFE {
+    shape: rectangle
+    style.fill: "#E3F2FD"
+    next: "Next.js on ECS Fargate"
+  }
+
+  account: Account MFE {
+    shape: rectangle
+    style.fill: "#FFF3E0"
+    lambda: "Lambda"
+  }
 }
 
 shared: Shared Platform {
-  shape: rectangle
   style.fill: "#F3E5F5"
   kong: Kong API Gateway {
     shape: hexagon
@@ -118,21 +120,21 @@ shared: Shared Platform {
 }
 
 customer -> gateway: HTTPS
-gateway.routing -> sfcc: "/* (fallback)" {
+gateway.routing -> zones.sfcc: "/* (fallback)" {
   style.stroke-dash: 3
 }
-gateway.routing -> content: "/inspiratie/*"
-gateway.routing -> pdp: "/p/*.html"
-gateway.routing -> account: "/account/*"
+gateway.routing -> zones.content: "/inspiratie/*"
+gateway.routing -> zones.pdp: "/p/*.html"
+gateway.routing -> zones.account: "/account/*"
 
-content -> shared.kong: APIs
-content -> shared.shell
-content -> shared.hds
-content -> shared.sanity
-pdp -> shared.kong: APIs
-pdp -> shared.shell
-pdp -> shared.hds
-account -> shared.kong: APIs
+zones.content -> shared.kong: APIs
+zones.content -> shared.shell
+zones.content -> shared.hds
+zones.content -> shared.sanity
+zones.pdp -> shared.kong: APIs
+zones.pdp -> shared.shell
+zones.pdp -> shared.hds
+zones.account -> shared.kong: APIs
 ```
 
 Each MFE is independent but shares:
@@ -146,25 +148,21 @@ Each MFE is independent but shares:
 ## The Service Lifecycle
 
 ```d2
-direction: right
+direction: down
 
-create: "Create\n(from template)" {
-  shape: rectangle
+create: "Create (from template)" {
   style.fill: "#E8F5E9"
 }
 
-build: "Build\n(your app)" {
-  shape: rectangle
+build: "Build (your app)" {
   style.fill: "#E3F2FD"
 }
 
-deploy: "Deploy\n(via pipeline)" {
-  shape: rectangle
+deploy: "Deploy (via pipeline)" {
   style.fill: "#FFF3E0"
 }
 
-operate: "Operate\n(in production)" {
-  shape: rectangle
+operate: "Operate (in production)" {
   style.fill: "#F3E5F5"
 }
 

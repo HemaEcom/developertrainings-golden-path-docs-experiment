@@ -1,77 +1,85 @@
 ---
-title: "CDK Infrastructure Guide"
+title: "CDK Infrastructure"
+sidebar:
+  order: 1
 ---
 
+> **Reference implementations**: [omni-web-content-frontend](https://github.com/HemaEcom/omni-web-content-frontend) | [omni-web-catalog-pdp](https://github.com/HemaEcom/omni-web-catalog-pdp) (both use the same infrastructure pattern)
 
-> Reference implementation: [omni-web-content-frontend](https://github.com/HemaEcom/omni-web-content-frontend)
+## How MFEs Run on AWS
 
----
+Every customer-facing MFE runs on AWS, deployed and managed entirely through CDK (Cloud Development Kit). You don't configure AWS resources manually — CDK code defines everything, and pipelines deploy it automatically.
 
-## Overview
+The infrastructure follows a **two-stack model**:
 
-Every HEMA micro-frontend (MFE) runs on AWS using a two-stack CDK architecture:
+| Stack | What it does | Who deploys it |
+|-------|-------------|----------------|
+| **CI Stack** (`-ci`) | CodePipeline that builds, tests, and deploys | Developer (one-time `cdk deploy`) |
+| **Runtime Stack** (`-rt`) | ECS Fargate + ALB + VPC Origin + Gateway Registration + Monitoring | The CI pipeline (automatic on every push to main) |
 
-| Stack | Suffix | Deployed by | Purpose |
-|-------|--------|-------------|---------|
-| **CI Stack** | `-ci` | Developer (one-time `cdk deploy`) | CodePipeline V2 that builds, tests, and deploys the runtime stack |
-| **Runtime Stack** | `-rt` | The CI pipeline (on every commit to main) | ECS Fargate service, ALB, VPC Origin, Gateway Registration, Monitoring |
+**Key rule:** Pipelines do not deploy pipelines. You deploy the CI stack manually once; from then on, every push to `main` triggers the pipeline which deploys the runtime stack.
 
-**Key rule:** Pipelines do not deploy pipelines. The CI stack is deployed manually; it then deploys the runtime stack automatically.
-
----
-
-## Architecture Diagram
+## Architecture
 
 ```d2
 direction: down
 
-ci: "CI Stack (-ci)" {
+ci: "CI Stack" {
   style.fill: "#FFF3E0"
 
-  source: "Source (GitHub)" {shape: rectangle}
-  build: "Build (npm, lint, test)" {shape: rectangle}
-  synth: "Synth (cdk synth)" {shape: rectangle}
-  deploy: "Deploy (runtime-rt)" {shape: rectangle}
+  source: GitHub {
+    icon: https://icons.terrastruct.com/dev%2Fgithub.svg
+    shape: rectangle
+  }
+  build: "Build & Test" {
+    icon: https://icons.terrastruct.com/aws%2FDeveloper%20Tools%2FAWS-CodeBuild.svg
+    shape: rectangle
+  }
+  synth: "CDK Synth" {
+    shape: rectangle
+  }
+  deploy: Deploy {
+    icon: https://icons.terrastruct.com/aws%2FDeveloper%20Tools%2FAWS-CodePipeline.svg
+    shape: rectangle
+  }
 
   source -> build -> synth -> deploy
 }
 
-rt: "Runtime Stack (-rt)" {
+rt: "Runtime Stack" {
   style.fill: "#E3F2FD"
 
-  bundle: "EcsNextJsBundle (L3 Construct)" {
-    style.fill: "#C8E6C9"
-
-    ecs: "ECS Fargate Service" {shape: rectangle}
-    alb: "ALB + Target Group" {shape: rectangle}
-    vpc_origin: "VPC Origin" {shape: rectangle}
-
-    vpc_origin -> alb -> ecs
+  vpc_origin: "VPC Origin" {
+    icon: https://icons.terrastruct.com/aws%2FNetworking%20&%20Content%20Delivery%2FAmazon-CloudFront.svg
+    shape: rectangle
   }
-
-  gateway_reg: "Gateway Registration" {
-    style.fill: "#BBDEFB"
+  alb: ALB {
+    icon: https://icons.terrastruct.com/aws%2FNetworking%20&%20Content%20Delivery%2FElastic-Load-Balancing.svg
+    shape: rectangle
+  }
+  ecs: "ECS Fargate" {
+    icon: https://icons.terrastruct.com/aws%2FCompute%2FAmazon-Elastic-Container-Service.svg
+    shape: rectangle
+  }
+  monitoring: CloudWatch {
+    icon: https://icons.terrastruct.com/aws%2FManagement%20&%20Governance%2FAmazon-CloudWatch.svg
     shape: rectangle
   }
 
-  monitoring: "AlertPublisher + CloudWatch" {
-    style.fill: "#FFF9C4"
-    shape: rectangle
-  }
-
-  bundle.vpc_origin -> gateway_reg: "registers routes"
-  bundle.ecs -> monitoring: "alarms"
+  vpc_origin -> alb -> ecs
+  ecs -> monitoring
 }
 
-ci.deploy -> rt: "deploys"
-
-cloudfront: "CloudFront (omni-web-gateway)" {
-  style.fill: "#E8EAF6"
-  shape: cloud
+cloudfront: "CloudFront Gateway" {
+  icon: https://icons.terrastruct.com/aws%2FNetworking%20&%20Content%20Delivery%2FAmazon-CloudFront.svg
+  shape: rectangle
 }
 
-cloudfront -> rt.bundle.vpc_origin: "private connectivity"
+ci.deploy -> rt: deploys
+cloudfront -> rt.vpc_origin: "private connectivity"
 ```
+
+**Traffic flow:** User → CloudFront Gateway → VPC Origin (private) → ALB → ECS Fargate container (your Next.js app)
 
 ---
 
@@ -80,149 +88,97 @@ cloudfront -> rt.bundle.vpc_origin: "private connectivity"
 ```
 lib/
 ├── common/                          # Reusable low-level constructs
-│   ├── alarms/                      # Alarm sensitivity configuration
-│   ├── alb/                         # Application Load Balancer construct
+│   ├── alarms/                      # Alarm sensitivity config
+│   ├── alb/                         # Application Load Balancer
 │   ├── cloudfront/                  # VPC Origin + RAM resource share
-│   ├── cloudwatch/                  # Log group construct
-│   ├── ecs/                         # ECS cluster, service, task definition
-│   ├── lambda/                      # Supporting Lambda functions
+│   ├── ecs/                         # Cluster, service, task definition
 │   └── parameters/                  # SSM Parameter Store base class
 ├── components/
 │   └── ecs-nextjs.bundle.ts         # L3 construct: ECS + ALB + VPC Origin
 ├── pipeline/
 │   ├── pipeline-stack.ts            # CodePipeline V2 definition
 │   ├── pipeline-stage.ts            # CDK Stage for deployment
-│   ├── pipeline-parameters.ts       # Pipeline SSM parameters
-│   └── integration-test.ts          # Integration test stage
+│   └── pipeline-parameters.ts       # Pipeline SSM parameters
 └── runtime/
-    ├── runtime-stack.ts             # Full runtime stack definition
+    ├── runtime-stack.ts             # Full runtime stack
     ├── runtime-parameters.ts        # Runtime SSM parameters
     ├── gateway-environments.ts      # Gateway zone/route builder
-    └── gateway-routes-config.json   # Route definitions for the gateway
+    └── gateway-routes-config.json   # Route definitions
 ```
 
 ---
 
-## The EcsNextJsBundle Construct
+## The EcsNextJsBundle (L3 Construct)
 
-This is the core L3 construct that bundles everything needed to run a Next.js app on ECS:
+This is the core building block — it bundles everything needed to run a Next.js app on ECS:
 
 ```typescript
-// lib/components/ecs-nextjs.bundle.ts (simplified)
-import { EcsCluster } from '../common/ecs/cluster';
-import { EcsService } from '../common/ecs/service';
-import { Alb } from '../common/alb/load-balancer';
-import { VpcOrigin } from '../common/cloudfront/vpc-origin';
-import { VpcOriginResourceShare } from '../common/cloudfront/vpc-origin-resource-share';
-
 export class EcsNextJsBundle extends Construct {
-  public readonly ecsCluster: EcsCluster;
-  public readonly ecsService: EcsService;
-  public readonly alb: Alb;
-  public readonly vpcOrigin: VpcOrigin;
-  public readonly resourceShare?: VpcOriginResourceShare;
-
   constructor(scope: Construct, id: string, props: EcsNextJsBundleProps) {
-    super(scope, id);
-
     // 1. ECS Cluster (Fargate)
-    this.ecsCluster = new EcsCluster(this, 'Cluster', { env: props.env, vpc: props.vpc });
+    this.ecsCluster = new EcsCluster(this, 'Cluster', { ... });
 
-    // 2. ECS Service (task definition, auto-scaling, Docker image)
+    // 2. ECS Service (task def, auto-scaling, Docker image)
     this.ecsService = new EcsService(this, 'EcsService', {
-      env: props.env,
-      cluster: this.ecsCluster,
-      vpc: props.vpc,
       dockerImagePath: props.dockerImagePath,
       containerPort: props.containerPort,
-      cpu: props.cpu,
-      memoryMiB: props.memoryMiB,
-      environment: props.ecsEnvironment,
-      secrets: props.ecsSecrets,
+      cpu: props.cpu,           // e.g., '1024'
+      memoryMiB: props.memoryMiB, // e.g., '2048'
       enableSpot: props.enableSpot,
     });
 
-    // 3. Application Load Balancer with health checks
+    // 3. ALB with health checks
     this.alb = new Alb(this, 'Alb', {
-      env: props.env,
-      ecsService: this.ecsService,
-      vpc: props.vpc,
-      healthCheckPath: props.healthCheckPath,
+      healthCheckPath: props.healthCheckPath, // '/api/health'
     });
 
-    // 4. CloudFront VPC Origin (private connectivity from CloudFront to ALB)
-    this.vpcOrigin = new VpcOrigin(this, 'VpcOrigin', {
-      env: props.env,
-      loadBalancer: this.alb.loadBalancer,
-    });
+    // 4. VPC Origin (private connectivity from CloudFront)
+    this.vpcOrigin = new VpcOrigin(this, 'VpcOrigin', { ... });
 
-    // 5. RAM Resource Share (cross-account access for the gateway)
-    if (props.gatewayAccountId) {
-      this.resourceShare = new VpcOriginResourceShare(this, 'ResourceShare', {
-        env: props.env,
-        vpcOriginArn: this.vpcOrigin.vpcOriginArn,
-        principalAccountId: props.gatewayAccountId,
-      });
-    }
+    // 5. RAM Resource Share (cross-account for gateway)
+    this.resourceShare = new VpcOriginResourceShare(this, 'ResourceShare', {
+      principalAccountId: props.gatewayAccountId,
+    });
   }
 }
 ```
 
-### What each component does
-
-| Component | Purpose |
-|-----------|---------|
-| **ECS Cluster** | Fargate cluster with capacity provider strategy |
-| **ECS Service** | Runs the Docker container, handles auto-scaling, health checks |
-| **ALB** | Routes traffic to ECS tasks, provides health check endpoint |
-| **VPC Origin** | CloudFront VPC Origin for private connectivity (no public ALB) |
-| **RAM Resource Share** | Shares the VPC Origin with the gateway account so CloudFront can access it |
+| Component | What it does |
+|-----------|-------------|
+| ECS Cluster | Fargate cluster with capacity provider |
+| ECS Service | Runs Docker container, handles auto-scaling |
+| ALB | Routes traffic to ECS tasks, health checks |
+| VPC Origin | Private connectivity from CloudFront (no public ALB) |
+| RAM Resource Share | Shares VPC Origin with gateway account |
 
 ---
 
 ## Runtime Stack
 
-The runtime stack wires the EcsNextJsBundle with gateway registration and monitoring:
+Wires the bundle with gateway registration and monitoring:
 
 ```typescript
-// lib/runtime/runtime-stack.ts (simplified)
 export class ServiceRuntimeStack extends Stack {
-  constructor(scope: Construct, id: string, props: ServiceStackProps) {
-    super(scope, id, props);
-
-    // Resolve SSM parameters
-    const params = new RuntimeParameters(this, 'RuntimeParameters', { ... });
-
+  constructor(scope, id, props) {
     // Look up existing VPC
     const vpc = Vpc.fromLookup(this, 'Vpc', { vpcId: params.resolved.vpcId });
 
-    // Deploy the ECS + ALB + VPC Origin bundle
+    // Deploy ECS + ALB + VPC Origin
     const NextJsEcs = new EcsNextJsBundle(this, 'App', {
-      env: props.environment,
-      vpc,
       dockerImagePath: join(import.meta.dirname, '../../src'),
       containerPort: 3000,
       cpu: '1024',
       memoryMiB: '2048',
       healthCheckPath: '/api/health',
       enableSpot: props.environment.temporary ?? false,
-      gatewayAccountId: params.resolved.gatewayAccountId.stringValue,
       ecsEnvironment: { /* env vars from SSM */ },
       ecsSecrets: { /* secrets from Secrets Manager */ },
     });
 
     // Register routes with the gateway
-    const gateway = new GatewayRegistration(this, 'GatewayRegistration', {
-      configurationName: props.environment.configurationName,
-      clientId: '{{resolve:secretsmanager:...}}',
-      clientSecret: '{{resolve:secretsmanager:...}}',
+    new GatewayRegistration(this, 'GatewayRegistration', {
       zones: buildGatewayZones(config, 'content', props.environment.name, origin),
     });
-
-    // Ensure RAM share exists before gateway registration
-    if (NextJsEcs.resourceShare) {
-      gateway.node.addDependency(NextJsEcs.resourceShare);
-    }
 
     // Monitoring (non-temporary environments only)
     if (!props.environment.temporary) {
@@ -237,98 +193,50 @@ export class ServiceRuntimeStack extends Stack {
 
 ## Pipeline Stack
 
-The pipeline uses CodePipeline V2 with these stages:
+CodePipeline V2 stages:
 
-1. **Source** — GitHub connection via CodeStar
+1. **Source** — GitHub via CodeStar connection
 2. **Synth** — Install deps, lint, test, build Next.js, `cdk synth`
-3. **Deploy** — Deploy the runtime stack (with manual approval for prod)
+3. **Deploy** — Deploy runtime stack (manual approval for prod)
 4. **GarbageCollect** — Clean up stale CDK assets and ECR images
 
 ```typescript
-// Key pipeline configuration
-const pipeline = new CodePipeline(this, 'Pipeline', {
-  pipelineType: PipelineType.V2,
-  pipelineName: props.project,
-  codeBuildDefaults: {
-    buildEnvironment: {
-      privileged: true,              // Required for Docker builds
-      computeType: ComputeType.MEDIUM,
-      buildImage: LinuxBuildImage.AMAZON_LINUX_2_ARM_3,
-    },
-    partialBuildSpec: BuildSpec.fromObject({
-      phases: {
-        install: { 'runtime-versions': { nodejs: 22 } },
-        pre_build: {
-          commands: [
-            // Fetch CodeArtifact token for @hema packages
-            'export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token ...)',
-            // Fetch build-time secrets from SSM/Secrets Manager
-            'export SANITY_API_READ_TOKEN=$(aws secretsmanager get-secret-value ...)',
-            // ... other env vars
-          ],
-        },
-      },
-    }),
-  },
-  synth: new ShellStep('Synth', {
-    commands: [
-      'npm run co:login',
-      'npm ci',
-      'cd src && npm ci && cd ..',
-      'npm run lint',
-      'npm run test',
-      'npm run build',
-      'npm run cdk synth',
-    ],
-  }),
-});
+synth: new ShellStep('Synth', {
+  commands: [
+    'npm run co:login',     // CodeArtifact login
+    'npm ci',
+    'cd src && npm ci && cd ..',
+    'npm run lint',
+    'npm run test',
+    'npm run build',        // Next.js build (Docker)
+    'npm run cdk synth',
+  ],
+}),
 ```
+
+Build environment: ARM (Amazon Linux 2023), Node 22, Docker-privileged (for image builds).
 
 ---
 
-## Key Dependencies (root package.json)
+## Environment Configuration (SSM)
 
-```json
-{
-  "dependencies": {
-    "aws-cdk-lib": "2.250.0",
-    "constructs": "^10.6.0",
-    "@hema/common-types": "0.3.1",
-    "@hema/monitoring-constructs": "3.2.1",
-    "@hema/omni-web-gateway-management-library-constructs": "2.7.0",
-    "@hema/omni-web-gateway-management-library-types": "2.7.0",
-    "@hema/omni-web-gateway-management-library-utils": "2.7.0"
-  },
-  "devDependencies": {
-    "aws-cdk": "2.1122.0",
-    "vitest": "^4.1.5",
-    "typescript": "^5.9.3"
-  }
-}
-```
+All runtime config is in AWS SSM Parameter Store:
 
----
-
-## Environment Configuration (SSM Parameters)
-
-All runtime configuration is stored in AWS SSM Parameter Store:
-
-| Parameter Path | Purpose |
-|----------------|---------|
-| `/nordcloud/ntwk/prov-mainvpc-vpcid` | VPC ID for the service |
-| `/hema/global/gateway/account-id` | Gateway account ID for RAM sharing |
-| `/hema/global/auth` | Security credentials (Secrets Manager) |
-| `/hema/{service}/{component}/{env}/log-level` | Log level per environment |
-| `/hema/{service-name}/sanity/project-id` | Sanity project ID |
-| `/hema/{service-name}/{env}/sanity/dataset` | Sanity dataset per environment |
-| `/hema/{service-name}/{env}/base-url` | Public base URL |
+| Parameter | Purpose |
+|-----------|---------|
+| `/nordcloud/ntwk/prov-mainvpc-vpcid` | VPC ID |
+| `/hema/global/gateway/account-id` | Gateway account for RAM |
+| `/hema/{service}/{env}/base-url` | Public base URL |
+| `/hema/{service}/sanity/project-id` | Sanity project ID |
+| `/hema/{service}/{env}/sanity/dataset` | Sanity dataset |
+| `/hema/{service}/{env}/log-level` | Log level |
 
 ---
 
 ## Deploying Your First Stack
 
 ```bash
-# One-time: deploy the CI pipeline stack
+# One-time: deploy the CI pipeline
 project="{service}-{component}" \
 repo="{repository-name}" \
 branch="main" \
@@ -336,27 +244,37 @@ environmentName="preprod" \
 npx cdk deploy
 ```
 
-After this, every push to `main` triggers the pipeline which:
-1. Builds the Next.js app into a Docker image
-2. Synthesizes the CDK runtime stack
-3. Deploys the runtime stack (ECS, ALB, VPC Origin, Gateway Registration)
+After this, every push to `main` automatically builds and deploys the runtime stack.
 
 ---
 
 ## Spot Instances for Sandboxes
 
-Feature branch (Butler) stacks use Fargate Spot to reduce costs:
+Feature branch stacks (Butler) use Fargate Spot to reduce costs:
 
 ```typescript
 enableSpot: props.environment.temporary ?? false,
 ```
 
-Production and pre-production environments use on-demand capacity for reliability.
+Production and pre-production use on-demand capacity for reliability.
 
 ---
 
-## Further Reading
+## Key Dependencies
 
-- [Gateway Registration Guide](../gateway/gateway-registration.md) — How routes are registered
-- [Docker/Standalone Build](./docker-standalone.md) — The Dockerfile and `output: 'standalone'`
-- [Butler documentation](https://github.com/HemaEcom/devops-butler/blob/develop/docs/consumers/how-to-deploy.md) — Feature sandbox automation
+```json
+{
+  "aws-cdk-lib": "2.250.0",
+  "constructs": "^10.6.0",
+  "@hema/monitoring-constructs": "3.2.1",
+  "@hema/omni-web-gateway-management-library-constructs": "2.7.0"
+}
+```
+
+---
+
+## Next Steps
+
+- [Docker & Standalone Build](./docker-standalone) — How the Next.js app is packaged into a container
+- [Gateway Registration](../gateway/gateway-registration) — How routes are registered with CloudFront
+- [Butler & Feature Sandboxes](../ci-cd/butler-feature-sandboxes) — Automatic sandbox environments for feature branches

@@ -1,9 +1,12 @@
 ---
-title: "Content Modeling — Sanity Schema Architecture"
+title: "Content Modeling"
+sidebar:
+  order: 2
 ---
 
-
 > **Source**: `omni-cms-composable-cms/schemaTypes/`
+>
+> 📐 **ADR:** [ADR-0002 — Using Sanity CMS for site configuration](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786) — Decision: Shell config (header, footer, navigation) lives in Sanity, not in static JSON files.
 
 ## Schema Organization
 
@@ -18,18 +21,16 @@ schemaTypes/
 ├── helpers/                    # Schema helpers (localized fields, reference fields)
 ├── validations/                # Custom validation rules
 ├── components/                 # Custom Studio UI components
-├── hooks/                      # Document action hooks
-├── fixedFieldsSync/            # Field sync utilities
-└── options/                    # Field option lists
+└── hooks/                      # Document action hooks
 ```
 
 ## Page Types (Documents)
 
-These are the top-level content documents that map to URLs in the frontend.
+Top-level content documents that map to frontend URLs.
 
 | Type Name | Enum | Description |
 |-----------|------|-------------|
-| `homePage` | `PageTypes.HOME_PAGE` | Main home page (one per country) |
+| `homePage` | `PageTypes.HOME_PAGE` | Home page (one per country) |
 | `promotionsPage` | `PageTypes.PROMOTIONS_PAGE` | Promotions landing page |
 | `flexibleContentPage` | `PageTypes.FLEXIBLE_CONTENT_PAGE` | Generic content pages with flexible components |
 | `inspirationalLanding` | `PageTypes.INSPIRATIONAL_LANDING` | Inspiration hub page |
@@ -38,11 +39,11 @@ These are the top-level content documents that map to URLs in the frontend.
 
 ### Flexible Page Template
 
-Most pages use the `createFlexiblePage` template which provides:
-- `country` field — which country this page belongs to
+Most pages use `createFlexiblePage` which provides:
+- `country` — which country this page belongs to
 - `title` — translated field (per language)
 - `slug` — translated field (per language)
-- `selectComponent` — **the flexible component array** (references to reusable documents)
+- `selectComponent` — the flexible component array (references to reusable documents)
 - `seoMetaData` — SEO metadata (title, description, canonical, robots)
 - `openGraph` — Open Graph metadata
 
@@ -62,7 +63,7 @@ export const flexibleContentPage = createFlexiblePage({
 
 ## Reusable Component Documents
 
-These are standalone documents that editors create once and reference from multiple pages.
+Standalone documents that editors create once and reference from multiple pages.
 
 | Type Name | Enum | Description |
 |-----------|------|-------------|
@@ -94,35 +95,23 @@ These are standalone documents that editors create once and reference from multi
 
 One document per country, managing MFE behavior.
 
-| Type Name | Enum | Description |
-|-----------|------|-------------|
-| `shellConfiguration` | `SHELL_CONFIGURATION` | Header, footer, navigation, social links, awards |
-| `searchSuggestionsConfiguration` | `SEARCH_SUGGESTIONS_CONFIGURATION` | Search autocomplete suggestions |
-| `headgroupConfiguration` | `HEADGROUP_CONFIGURATION` | PDP headgroup display rules |
-| `productLevelConfig` | `PRODUCT_LEVEL_CONFIG` | Product-level display config (singleton) |
-| `pdpRecommendationCarousels` | `PDP_RECOMMENDATION_CAROUSELS` | PDP recommendation carousel config |
-| `marketingNewsletterConfiguration` | `MARKETING_NEWSLETTER_CONFIGURATION` | Newsletter signup config |
-| `categoryTree` | `CATEGORY_TREE` | Category navigation tree (one per country) |
+| Type Name | Description |
+|-----------|-------------|
+| `shellConfiguration` | Header, footer, navigation, social links, awards |
+| `searchSuggestionsConfiguration` | Search autocomplete suggestions |
+| `headgroupConfiguration` | PDP headgroup display rules |
+| `productLevelConfig` | Product-level display config (singleton) |
+| `pdpRecommendationCarousels` | PDP recommendation carousel config |
+| `marketingNewsletterConfiguration` | Newsletter signup config |
+| `categoryTree` | Category navigation tree (one per country) |
 
 ### Shell Configuration
 
-The Shell Configuration document replaces static `header-data.json` and `footer-data.json`. It contains:
-- Header top navigation links
-- Header main links
-- Footer newsletter config
-- Footer shop search
-- Footer customer service links
-- Footer social links
-- Footer payment methods
-- Footer navigation links
-- Footer legal links
-- Footer awards
-- Footer contact details
-- Geo popup exclusions
+Contains everything for the Web Shell: header top navigation, main links, footer newsletter, customer service links, social links, payment methods, legal links, awards, contact details, and geo popup exclusions.
 
-## Translated Fields Pattern
+## Translated Fields
 
-Fields that need multiple language versions use `createTranslatedField`:
+Fields needing multiple language versions use `createTranslatedField`:
 
 ```typescript
 // Creates: title.nl, title.fr, title.de
@@ -131,21 +120,11 @@ createTranslatedField({
   title: "Title",
   type: "string",
 });
-
-// Creates: slug.nl, slug.fr, slug.de (with slug type)
-createTranslatedField({
-  name: "slug",
-  title: "Slug",
-  type: "string",
-  customField: { name: "slug", type: "slug", ... },
-});
 ```
 
-In GROQ queries, you access these as `title[$lang]` or `slug[$lang].current`.
+In GROQ queries, access as `title[$lang]` or `slug[$lang].current`.
 
-## Object Types
-
-Embedded within documents (not standalone):
+## Object Types (Embedded)
 
 | Type | Purpose |
 |------|---------|
@@ -153,30 +132,13 @@ Embedded within documents (not standalone):
 | `imageWithMetadata` | Image reference + DAM metadata |
 | `seoMetaData` | SEO fields (title, description, canonical, robots) |
 | `openGraph` | OG metadata for social sharing |
-| `microcopyEntry` | Legacy translation key-value pair |
-| `microcopyLocaleEntry` | Per-locale translation entry |
-| `seoLinkEntry` | SEO link with attributes |
-| `quickLink` | Quick navigation link with icon |
-| `signings` | Product signings/badges |
-| `promoCategory` | Promotion category reference |
+| `microcopyEntry` | Translation key-value pair |
 
 ## Adding a New Schema Type
 
-1. Create the schema file in the appropriate directory:
-   - `documents/` for page types
-   - `reusableDocuments/` for reusable components
-   - `objects/` for embedded objects
-
-2. Register it in `schemaTypes/index.ts`:
-   ```typescript
-   import { myNewType } from "./reusableDocuments/myNewType";
-   export const schemaTypes = [..., myNewType];
-   ```
-
-3. If it needs internationalization, add it to `SANITY_CONFIG.TRANSLATION_SCHEMA_TYPES` in `sanityConstants.ts`
-
-4. If it's a reusable component, add it to the Studio structure (desk) in `sanity.config.ts`
-
-5. Run `npm run validate-schema` to verify
-
-6. If the schema change requires data migration, create a migration in `migrations/`
+1. Create the file in the appropriate directory (`documents/`, `reusableDocuments/`, or `objects/`)
+2. Register in `schemaTypes/index.ts`
+3. If it needs internationalization, add to `SANITY_CONFIG.TRANSLATION_SCHEMA_TYPES` in `sanityConstants.ts`
+4. If reusable component, add to Studio desk structure in `sanity.config.ts`
+5. Run `npm run validate-schema`
+6. If data migration needed, create one in `migrations/`

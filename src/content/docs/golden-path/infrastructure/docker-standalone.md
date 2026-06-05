@@ -1,15 +1,14 @@
 ---
-title: "Docker / Standalone Build Guide"
+title: "Docker & Standalone Build"
+sidebar:
+  order: 2
 ---
 
+> **Reference**: [omni-web-content-frontend/src/Dockerfile](https://github.com/HemaEcom/omni-web-content-frontend/blob/main/src/Dockerfile)
 
-> Reference: [omni-web-content-frontend/src/Dockerfile](https://github.com/HemaEcom/omni-web-content-frontend/blob/main/src/Dockerfile)
+## Why Standalone?
 
----
-
-## Why Standalone Output?
-
-HEMA MFEs run on **ECS Fargate** (Docker containers). Next.js's default build output includes the entire `node_modules` directory, which creates unnecessarily large images. The `standalone` output mode produces a self-contained build that includes only the files needed to run the application.
+MFEs run on ECS Fargate as Docker containers. Next.js's `output: 'standalone'` produces a self-contained build with only the files needed to run — reducing image size from ~1GB+ to ~200-300MB.
 
 ```typescript
 // next.config.ts

@@ -22,10 +22,43 @@ When a zone registers its sitemap with `replaces: ["key"]`, the matching SFCC fa
 
 ## How It Works
 
-```
-GET /sitemap.xml → Gateway assembles sitemapindex:
-  ├── Fallback entries (SFCC) — unless replaced by a zone
-  └── Zone sitemaps (MFEs) — registered per environment
+```d2
+direction: down
+
+crawler: "Search Engine Crawler" {
+  style.fill: "#FFF9C4"
+}
+
+gateway: "Gateway (CloudFront)" {
+  style.fill: "#E3F2FD"
+  assembler: "/sitemap.xml assembly"
+}
+
+sources: "" {
+  style.border-radius: 0
+  style.stroke: "transparent"
+  style.fill: "transparent"
+
+  sfcc: "SFCC (Fallback)" {
+    style.fill: "#FFCCBC"
+    note: "Legacy sitemaps\n(excluded when replaced)"
+  }
+
+  content: "Content MFE" {
+    style.fill: "#C8E6C9"
+    note: "sitemap-pages\nsitemap-images"
+  }
+
+  pdp: "PDP MFE" {
+    style.fill: "#C8E6C9"
+    note: "sitemap-products"
+  }
+}
+
+crawler -> gateway: "GET /sitemap.xml"
+gateway -> sources.sfcc: "fallback entries"
+gateway -> sources.content: "replaces: folders"
+gateway -> sources.pdp: "replaces: products"
 ```
 
 ## MFE Requirements

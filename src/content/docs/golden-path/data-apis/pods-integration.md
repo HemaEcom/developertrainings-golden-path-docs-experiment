@@ -1,42 +1,47 @@
 ---
-title: "PODS Integration — Product Data via GraphQL"
+title: "PODS Integration"
+sidebar:
+  order: 3
 ---
 
+> **Source**: `omni-web-catalog-pdp/src/services/pods/`
+>
+> 📐 **ADR:** [ADR-0008 — Use PODS to get product data](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/6223953921)
 
-> **ADR**: [HEM100-ADR-0008 — Use PODS to get product data](https://hemaecom.atlassian.net/wiki/spaces/COCO/pages/5997002786)
-> **Source**: `omni-web-catalog-pdp/src/services/pods/`, `src/clients/graphql/`
+## What Is PODS?
 
-## Overview
-
-**PODS** (Product Omnichannel Data Service) is the GraphQL API that provides product data (pricing, promotions, characteristics, media, fulfillment). Any MFE that renders product information uses PODS.
+**PODS** (Product Omnichannel Data Service) is the GraphQL API for product data. It provides pricing, promotions, stock, media, characteristics, and fulfillment info. Any MFE that renders product information uses PODS.
 
 ## Architecture
 
-```
-MFE (Next.js RSC)
-    │
-    │ Apollo Client (server-side only)
-    │ Authorization: Bearer <kong-token>
-    ▼
-Kong API Gateway
-    │
-    │ Route: /omni-products/v1/graphql
-    ▼
-PODS GraphQL API
-    │
-    ▼
-Product Data (pricing, stock, media, characteristics)
+```d2
+direction: down
+
+mfe: "MFE (Server Component)\nApollo Client" {
+  style.fill: "#E3F2FD"
+}
+
+kong: "Kong API Gateway" {
+  style.fill: "#FFF9C4"
+}
+
+pods: "PODS GraphQL\n/omni-products/v1/graphql" {
+  style.fill: "#E8F5E9"
+}
+
+mfe -> kong: "Bearer token"
+kong -> pods: "authenticated"
 ```
 
 ## Setup
 
-### 1. Dependencies
+### Dependencies
 
 ```bash
 npm install @apollo/client @apollo/client-integration-nextjs graphql
 ```
 
-### 2. Store IDs
+### Store IDs
 
 Each country has a PODS store ID:
 
@@ -47,10 +52,9 @@ Each country has a PODS store ID:
 | France (FR) | `0759` |
 | Germany (DE) | `0751` |
 
-### 3. Apollo Client (Server-Side)
+### Apollo Client (Server-Side)
 
 ```typescript
-// src/clients/graphql/apollo-client-rsc.ts
 import { registerApolloClient, ApolloClient, InMemoryCache } from '@apollo/client-integration-nextjs';
 import { HttpLink, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
@@ -65,17 +69,15 @@ export function createApolloQueryFn(authenticator: Authenticator) {
     const httpLink = new HttpLink({ uri: `${process.env.BASE_API_URL}/omni-products/v1/graphql` });
     return new ApolloClient({ link: from([authLink, httpLink]), cache: new InMemoryCache() });
   });
-
   return query;
 }
 ```
 
 `registerApolloClient` ensures one client instance per request in RSC.
 
-### 4. GraphQL Query
+## Query Example
 
 ```typescript
-// src/services/pods/queries/get-products.ts
 import { gql } from '@apollo/client';
 
 export const GET_PRODUCTS = gql`
@@ -83,23 +85,16 @@ export const GET_PRODUCTS = gql`
     getProducts(skus: $skus, locale: $locale, storeId: $storeId) {
       identifiers { sku }
       properties {
-        general {
-          name
-          description
-          pdpUrl
-          media { images { name url } }
-          hierarchy { headGroup { hierarchyId name } }
-          characteristics { signings { key value } }
-        }
-        fulfillment { deliveryPromise availability }
+        general { name description pdpUrl media { images { name url } } }
         sales { price { current original } promotions { label } }
+        fulfillment { deliveryPromise availability }
       }
     }
   }
 `;
 ```
 
-### 5. Repository + Service Pattern
+## Repository + Service Pattern
 
 ```typescript
 // Repository (data access)
@@ -116,41 +111,43 @@ export class PodsService {
   constructor(private readonly repository: PodsRepository) {}
 
   async getProducts(skus: string[], apiLocale: ApiLocale) {
-    const storeId = resolveStoreId(apiLocale); // "nl_NL" → "0755"
+    const storeId = resolveStoreId(apiLocale);
     return this.repository.getProducts(skus, apiLocale, storeId);
   }
 }
 ```
 
-### 6. Locale Mapping
+## Locale Mapping
 
-PODS uses `language_COUNTRY` format (e.g., `nl_NL`, `fr_BE`):
+PODS uses `language_COUNTRY` format:
 
 ```typescript
-// Convert from routing locale to API locale
 // "nl-nl" → "nl_NL", "fr-be" → "fr_BE"
 const apiLocale = locale.replace('-', '_').replace(/_.+/, (m) => m.toUpperCase());
 ```
+
+## What PODS Provides
+
+| Data | Description |
+|------|-------------|
+| Identifiers | SKU, article number |
+| General | Name, description, PDP URL, product type |
+| Media | Images (from Bynder via PIM) |
+| Hierarchy | Category, headgroup, merchandise category |
+| Characteristics | Signings, material, dimensions, care instructions |
+| Sales | Current price, original price, promotions |
+| Fulfillment | Delivery promise, availability, stock |
 
 ## Environment Variables
 
 | Variable | Purpose |
 |----------|---------|
-| `BASE_API_URL` | Kong API base URL (from SSM: `/hema/global/business-base-url`) |
-| `AUTH_SECRET` | Kong credentials JSON (from Secrets Manager: `/hema/global/auth`) |
-| `NEXT_PUBLIC_PODS_URL_PATH` | PODS endpoint path (default: `omni-products/v1/graphql`) |
+| `BASE_API_URL` | Kong API base URL |
+| `AUTH_SECRET` | Kong credentials JSON (see [Kong Authentication](./kong-authentication)) |
 
-## Error Handling
+## Key Rules
 
-PODS can return partial data (some products found, others not). The service layer uses a `Result` type:
-
-```typescript
-type Result<T> = { kind: 'success'; data: T } | { kind: 'failure'; error: string };
-```
-
-## Key Considerations
-
-- **Server-only**: PODS calls happen exclusively in RSC/server actions (never client-side)
-- **Authentication**: Uses `KongAuthenticator` (see [Kong Authentication](./kong-authentication.md))
-- **Caching**: Apollo's `InMemoryCache` with type policies; Next.js ISR handles page-level caching
-- **Load**: ~2 req/sec at peak for content pages with carousels (confirmed insignificant by PODS team)
+- **Server-only** — PODS calls happen exclusively in RSC/server actions (never client-side)
+- **Always use Kong** — Never call PODS directly, always through Kong with Bearer token
+- **Error handling** — PODS can return partial data; use a Result type pattern
+- **Caching** — Apollo's `InMemoryCache` per request; Next.js ISR handles page-level caching

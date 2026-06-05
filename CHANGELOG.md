@@ -10,6 +10,67 @@ Each entry follows:
 ### What changed
 ```
 
+## Conventions
+
+- **D2 diagrams:** Always use `direction: down` (vertical/top-down). Horizontal layouts are too compressed and hard to read in the Starlight page width.
+
+---
+
+## [2026-06-05] - Iterate Data & APIs section: reorder, diagrams, narrative
+### What changed
+- Set sidebar ordering: Overview (1) → Kong Authentication (2) → PODS Integration (3) → Session Sharing (4)
+- Rewrote Overview with d2 diagram showing MFE → Kong → backends flow and "What Data Comes From Where" table
+- Replaced ASCII diagram in Kong Authentication with d2 (AWS Secrets Manager icon)
+- Replaced ASCII diagram in PODS Integration with d2
+- Replaced ASCII diagram in Session Sharing with d2
+- Added direct ADR links (ADR-0008 → page 6223953921, ADR-0004 → page 6000803842)
+- Added transition note to Session Sharing (it's a migration-era pattern)
+- Tightened all pages: removed redundant prose, kept actionable content
+### Why
+- Reading order matters: understand the API landscape → learn auth → integrate PODS → understand session sharing
+- d2 diagrams (vertical, per convention) replace hard-to-read ASCII art
+- Session sharing is a transition pattern, should be clearly marked as such
+
+---
+
+## [2026-06-05] - Iterate Infrastructure section: narrative, order, AWS icons
+### What changed
+- Rewrote `cdk-infrastructure.md` with a clear intro ("How MFEs Run on AWS"), better narrative flow
+- Added sidebar ordering: CDK Infrastructure (1) → Docker & Standalone (2)
+- Added AWS icons to the architecture diagram (via d2 `icon` + `shape: rectangle`)
+- Simplified the page: removed redundant code, kept what developers need to understand and deploy
+- Added "Traffic flow" one-liner and "Next Steps" links at the bottom
+- Tightened Docker page intro
+### Why
+- Infrastructure is complex — the intro should orient developers before diving into CDK code
+- AWS icons make the diagram immediately recognizable
+- Explicit ordering creates a reading path: understand the architecture → understand how the app is packaged
+
+---
+
+## [2026-06-05] - Iterate CMS section: reorder, tighten narrative, focus on facts
+### What changed
+- Set explicit sidebar ordering: Overview (1) → Content Modeling (2) → MFE Integration (3) → Content Flow (4) → DAM Sync (5) → Deployment (6)
+- Rewrote all 6 CMS docs to focus on facts and current implementation state
+- Added "Integration Status" note on overview (CMS is still being actively integrated)
+- Replaced ASCII diagrams with d2 diagrams (vertical layout per convention)
+- Removed aspirational/speculative content — kept only what exists in the repos
+- Tightened narrative: removed redundant introductions, kept actionable info
+- Added section guide table to overview for navigation
+### Why
+- CMS integration is still in progress — docs should reflect facts, not plans
+- Developers need a clear reading order (overview → schemas → consumption → preview → DAM → deploy)
+- Vertical d2 diagrams are more readable than ASCII art boxes
+### Sources used
+- Read all 6 existing CMS docs
+- Cross-referenced with `omni-cms-composable-cms` and `omni-web-content-frontend` repo structures
+
+---
+
+## [2026-06-05] - Federated Sitemaps: add d2 diagram (vertical)
+### What changed
+- Replaced text-only "How It Works" in `gateway/federated-sitemaps.md` with a vertical d2 diagram showing crawler → gateway → sources flow
+
 ---
 
 ## [2026-06-05] - Remove dedicated Libraries section

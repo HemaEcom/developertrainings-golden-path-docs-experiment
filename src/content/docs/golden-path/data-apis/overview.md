@@ -1,63 +1,73 @@
 ---
-title: "Data APIs — Overview"
+title: "Data & APIs Overview"
+sidebar:
+  order: 1
 ---
 
+## How MFEs Access Backend Services
 
-## Product Data: Moving to PODS
+MFEs don't call backend services directly. All API traffic goes through **Kong API Gateway** with OAuth2 authentication. This applies to any service behind Kong: PODS (product data), Newsletter, Commerce, etc.
 
-**PODS** (Product Omnichannel Data Service) is HEMA's unified product data API. It's the **single source of truth** for product information across all channels (web, app, in-store).
+```d2
+direction: down
 
-### Why PODS?
+mfe: "MFE (Next.js)\nServer-side only" {
+  style.fill: "#E3F2FD"
+}
 
-HEMA is moving away from SFCC's Commerce API for product data. PODS provides:
+kong: "Kong API Gateway\n(OAuth2 Bearer token)" {
+  style.fill: "#FFF9C4"
+}
 
-- **Unified product data** — One API for all channels, not per-storefront
-- **Real-time pricing & promotions** — Always current, no stale cache
-- **Rich product model** — Characteristics, signings, media, fulfillment, hierarchy
-- **GraphQL** — Fetch exactly what you need, no over-fetching
-- **Country-aware** — Store IDs per region (NL, BE, FR, DE)
+apis: "" {
+  style.stroke: "transparent"
+  style.fill: "transparent"
 
-### What PODS Provides
+  pods: "PODS\n(Product Data)" {
+    style.fill: "#E8F5E9"
+  }
 
-| Data | Description |
-|------|-------------|
-| Product identifiers | SKU, article number |
-| General info | Name, description, PDP URL, product type |
-| Media | Images (from Bynder via PIM) |
-| Hierarchy | Category, division, headgroup, merchandise category |
-| Characteristics | Signings, material, dimensions, care instructions |
-| Sales | Current price, original price, promotions |
-| Fulfillment | Delivery promise, availability, stock |
+  commerce: "Commerce API\n(Cart, Checkout)" {
+    style.fill: "#E8F5E9"
+  }
 
-### Who Uses PODS?
+  newsletter: "Newsletter API" {
+    style.fill: "#E8F5E9"
+  }
+}
 
-| MFE | What It Fetches |
-|-----|----------------|
-| Catalog/PDP | Full product data for product detail pages |
-| Content | Product carousels on inspiration/home pages |
-| Checkout (future) | Cart product details, pricing validation |
-| Search/Discovery (future) | Product cards in search results |
-
-### Direction of Travel
-
-```
-Today:  SFCC Commerce API ←── some MFEs still use this for cart/checkout
-        PODS GraphQL      ←── all product display data
-
-Future: SFCC Commerce API ←── only legacy (being phased out)
-        PODS GraphQL      ←── ALL product data across all MFEs
+mfe -> kong: "Bearer token"
+kong -> apis.pods
+kong -> apis.commerce
+kong -> apis.newsletter
 ```
 
-Every new MFE that needs product data **MUST use PODS**, not SFCC Commerce API. This is a decided architectural direction (ADR-0008).
+**Key facts:**
+- All API calls are **server-side only** (RSC, server actions, API routes) — never from the browser
+- Authentication uses OAuth2 client credentials stored in AWS Secrets Manager
+- Token management is handled by `KongAuthenticator` (singleton, proactive refresh)
 
-### Integration Pattern
+## What Data Comes From Where
 
-PODS is accessed **server-side only** via Kong API Gateway with OAuth2 authentication:
+| Data | Source | Protocol | Used By |
+|------|--------|----------|---------|
+| Product info (price, stock, media) | PODS | GraphQL | PDP, Content (carousels) |
+| Content pages, components | Sanity CMS | GROQ | Content MFE |
+| Shell config (header, footer) | Sanity CMS | GROQ | All MFEs (via Web Shell) |
+| Cart, checkout | SFCC Commerce API | REST | Web Shell, Checkout |
+| Newsletter signup | Newsletter API | REST | Content, Footer |
+| User session | Cookies (same domain) | HTTP | All MFEs |
 
-```
-MFE (RSC) → Kong (Bearer token) → PODS GraphQL
-```
+## Architectural Rule
 
-For implementation details, see:
-- [PODS Integration Guide](./pods-integration.md) — Apollo Client setup, queries, store IDs
-- [Kong Authentication](./kong-authentication.md) — OAuth2 client credentials flow
+> **ADR-0008**: Every new MFE that needs product data MUST use PODS, not SFCC Commerce API.
+
+SFCC is being phased out. PODS is the single source of truth for product data.
+
+## Section Guide
+
+| Page | What you'll learn |
+|------|------------------|
+| [Kong Authentication](./kong-authentication) | OAuth2 setup, KongAuthenticator, secrets injection |
+| [PODS Integration](./pods-integration) | Apollo Client, GraphQL queries, store IDs, locale mapping |
+| [Session Sharing](./session-sharing) | How auth cookies work during the SFCC → headless transition |
