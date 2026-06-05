@@ -16,6 +16,45 @@ Each entry follows:
 
 ---
 
+## [2026-06-05] - Iterate Performance & Caching page: restructure, validate, add diagrams
+### What changed
+- Rewrote `src/content/docs/golden-path/performance/caching-cdn.md` with better narrative flow
+- Added D2 diagram showing the full caching stack (CloudFront → ALB → ISR/unstable_cache/Sanity CDN)
+- Added D2 diagram for universal image loader routing
+- Added new section on CloudFront cache policy with actual code from `omni-web-gateway/lib/common/cloudfront/shared-policies.ts`
+- Corrected `remotePatterns` — was showing only `www.hema.nl`/`www.hema.com`, now includes all environments (acc, staging, www)
+- Added note about `force-dynamic` on root layout (COFI-621 tracking)
+- Added `unstable_cache` section with actual microcopy-repository.ts code
+- Added font loading section (hurmeHema via @hema/hds-assets/next/font)
+- Added Sanity client performance section (useCdn, requestTagPrefix for monitoring)
+- Added zone-config.ts code for multi-zone asset routing
+- Added Dockerfile runtime stage showing standalone optimization
+- Converted checklist from checkboxes to a table with "why" column
+- Updated `sections/performance/caching-cdn.md` to match
+### Why
+- Previous version had correct information but lacked narrative structure and explanations of "why"
+- Missing key implementation detail: CloudFront policy is origin-controlled (defaultTtl: 0), which is not obvious
+- Diagrams help developers quickly grasp the caching layers without reading all the prose
+- `remotePatterns` was incomplete — missing acc/staging hostnames that are in the actual config
+### Sources used
+- `omni-web-content-frontend/src/next.config.ts` — validated all config values
+- `omni-web-content-frontend/src/app/[locale]/[...slugs]/page.tsx` — confirmed revalidate: 300
+- `omni-web-content-frontend/src/app/[locale]/page.tsx` — confirmed generateStaticParams
+- `omni-web-content-frontend/src/app/sitemap-index/route.ts` — confirmed revalidate: 3600
+- `omni-web-content-frontend/src/repositories/sanity/client.ts` — confirmed useCdn: true, requestTagPrefix
+- `omni-web-content-frontend/src/repositories/sanity/microcopy-repository.ts` — confirmed unstable_cache pattern
+- `omni-web-content-frontend/src/utils/zone-config.ts` — confirmed zone prefix logic
+- `omni-web-content-frontend/src/utils/universal-image-loader/universal-image-loader.ts` — confirmed image routing
+- `omni-web-content-frontend/src/app/layout.tsx` — confirmed preconnect, force-dynamic, font loading
+- `omni-web-content-frontend/src/Dockerfile` — confirmed standalone build stages
+- `omni-web-gateway/lib/common/cloudfront/shared-policies.ts` — confirmed cache policy details
+- `omni-web-gateway/lib/components/base-gateway.bundle.ts` — confirmed compress: true, Brotli
+### Gaps remaining
+- No Core Web Vitals monitoring setup documented (how to track LCP/CLS/INP in production)
+- No bundle analysis guidance (how to identify large dependencies)
+- No streaming/Suspense patterns documented (React 18+ progressive rendering)
+- COFI-621 resolution could change the force-dynamic story
+
 ## [2026-06-05] - Iterate Data & APIs section: reorder, diagrams, narrative
 ### What changed
 - Set sidebar ordering: Overview (1) → Kong Authentication (2) → PODS Integration (3) → Session Sharing (4)
