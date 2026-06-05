@@ -1,0 +1,601 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Environments — Full Landscape Map | Frontend Golden Path</title><link rel="canonical" href="https://hemaecom.github.io/developertrainings-golden-path-docs-experiment/golden-path/environments/environment-map/"/><link rel="sitemap" href="/developertrainings-golden-path-docs-experiment/sitemap-index.xml"/><link rel="shortcut icon" href="/developertrainings-golden-path-docs-experiment/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.18.2"/><meta name="generator" content="Starlight v0.34.8"/><meta property="og:title" content="Environments — Full Landscape Map"/><meta property="og:type" content="article"/><meta property="og:url" content="https://hemaecom.github.io/developertrainings-golden-path-docs-experiment/golden-path/environments/environment-map/"/><meta property="og:locale" content="en"/><meta property="og:description" content="The recommended way to build frontend MFEs at HEMA"/><meta property="og:site_name" content="Frontend Golden Path"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="The recommended way to build frontend MFEs at HEMA"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/developertrainings-golden-path-docs-experiment/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/developertrainings-golden-path-docs-experiment/_astro/index.CZyFLVvC.css"><script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-vrdttmbt"> <header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/developertrainings-golden-path-docs-experiment/" class="site-title sl-flex astro-m46x6ez3">  <img class="astro-m46x6ez3" alt src="/developertrainings-golden-path-docs-experiment/_astro/hema-logo.Djn8zkf5.svg" width="80" height="80">  <span class="astro-m46x6ez3" translate="no"> Frontend Golden Path </span> </a>  </div> <div class="sl-flex print:hidden astro-kmkmnagf"> <site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/Search.astro_astro_type_script_index_0_lang.CXlTcth2.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <a href="https://github.com/HemaEcom/developertrainings-golden-path-docs-experiment" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt"> <div class="sidebar-content sl-flex astro-vrdttmbt"> <sl-sidebar-state-persist data-hash="1362yfm" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Overview</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Golden Path</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Tutorial</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/01-overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Tutorial: Build Your First MFE</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/02-foundation/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">1. Foundation Setup</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/03-cicd-pipeline/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">2. CI/CD Pipeline</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/04-nextjs-setup/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">3. Next.js App Setup</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/05-local-dev/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">5. Local Development</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/06-capabilities/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">6. Core Capabilities</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/tutorial/07-deployment/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">7. Deployment</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Onboarding</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/environment-configuration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Environment Configuration</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/i18n-setup/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Internationalization (i18n)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/quick-reference-card/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Quick Reference Card — HEMA100 Frontend</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/onboarding/server-actions-vs-api-routes/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Server Actions vs API Routes</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Infrastructure</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/infrastructure/cdk-infrastructure/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CDK Infrastructure Guide</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/infrastructure/docker-standalone/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Docker / Standalone Build Guide</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Gateway</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/gateway/federated-sitemaps/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Federated Sitemaps</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/gateway/gateway-registration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Gateway Registration Guide</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/gateway/multi-zone-config/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Multi-Zone Next.js Configuration</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="5"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Libraries</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/libraries/hds-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">HEMA Design System (HDS / Tompouce)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/libraries/web-shell-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Web Shell Integration</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="6"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">CI/CD</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/ci-cd/pipeline-overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CI/CD Pipeline Overview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/ci-cd/butler-feature-sandboxes/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Butler &amp; Feature Sandbox Deployments</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/ci-cd/testing-strategy/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Testing Strategy</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="7"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">CMS</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/content-flow/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Content Flow &amp; Live Preview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/content-modeling/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Content Modeling — Sanity Schema Architecture</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/dam-sync/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">DAM Sync — Bynder Asset Synchronization</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/deployment/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CMS Deployment — Pipeline &amp; Environments</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/mfe-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MFE Integration — Consuming CMS Data in Next.js</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/cms/overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">CMS Overview — Sanity Composable CMS</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="8"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Data &amp; APIs</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/kong-authentication/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Kong API Authentication</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Data APIs — Overview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/pods-integration/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">PODS Integration — Product Data via GraphQL</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/session-sharing/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Session Sharing — SFCC &amp; Next.js Coexistence</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="9"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Environments</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/environments/environment-map/" aria-current="page" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Environments — Full Landscape Map</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="10"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Performance</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/performance/caching-cdn/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Performance — Caching, CDN &amp; Core Web Vitals</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="11"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Security</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/security/security-headers-waf/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Security — WAF, Headers &amp; Data Protection</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="12"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Monitoring</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/monitoring/observability/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Monitoring &amp; Observability</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="13"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">ADRs</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/adrs/adr-summary/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Architecture Decision Records — Summary &amp; Golden Path Alignment</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/HemaEcom/developertrainings-golden-path-docs-experiment" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script><script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script><div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><div class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></div><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#aws-accounts" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">AWS Accounts</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#environment-naming-model" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Environment Naming Model</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#per-service-environment-map" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Per-Service Environment Map</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#mfe-omni-web-content-frontend" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">MFE: omni-web-content-frontend</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#mfe-omni-web-catalog-pdp" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">MFE: omni-web-catalog-pdp</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#cms-omni-cms-composable-cms" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">CMS: omni-cms-composable-cms</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#gateway-omni-web-gateway" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Gateway: omni-web-gateway</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#gateway-api-omni-web-gateway-api" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Gateway API: omni-web-gateway-api</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#libraries-omni-web-app-shell-library-hema-design-system" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Libraries (omni-web-app-shell-library, hema-design-system)</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#environment-flow-developer-journey" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Environment Flow (Developer Journey)</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#cms-specific-flow" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">CMS-specific flow:</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#ssm-parameter-namespace-convention" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">SSM Parameter Namespace Convention</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#secrets-manager-convention" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Secrets Manager Convention</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#cdk-stack-naming-convention" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">CDK Stack Naming Convention</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#cdk-tags-applied-to-all-stacks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">CDK Tags (Applied to All Stacks)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-differences-between-environments" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key Differences Between Environments</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#aws-accounts" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">AWS Accounts</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#environment-naming-model" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Environment Naming Model</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#per-service-environment-map" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Per-Service Environment Map</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#mfe-omni-web-content-frontend" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">MFE: omni-web-content-frontend</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#mfe-omni-web-catalog-pdp" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">MFE: omni-web-catalog-pdp</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#cms-omni-cms-composable-cms" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">CMS: omni-cms-composable-cms</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#gateway-omni-web-gateway" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Gateway: omni-web-gateway</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#gateway-api-omni-web-gateway-api" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Gateway API: omni-web-gateway-api</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#libraries-omni-web-app-shell-library-hema-design-system" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Libraries (omni-web-app-shell-library, hema-design-system)</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#environment-flow-developer-journey" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Environment Flow (Developer Journey)</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#cms-specific-flow" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">CMS-specific flow:</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#ssm-parameter-namespace-convention" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">SSM Parameter Namespace Convention</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#secrets-manager-convention" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Secrets Manager Convention</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#cdk-stack-naming-convention" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">CDK Stack Naming Convention</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#cdk-tags-applied-to-all-stacks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">CDK Tags (Applied to All Stacks)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-differences-between-environments" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key Differences Between Environments</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Environments — Full Landscape Map</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <blockquote>
+<p>How environments are structured across HEMA100 frontend services.</p>
+<p>For general AWS access, account requests, and platform-wide policies, see the <a href="https://servicecatalog.ui.hema.digital/docs/default/component/metis-general/architecture-principles/reference/platform-catalog/">Platform Catalog</a> and <a href="https://servicecatalog.ui.hema.digital/docs/default/component/metis-general/aws/aws-access/">AWS Access Guide</a> in metis-general.</p>
+</blockquote>
+<div class="sl-heading-wrapper level-h2"><h2 id="aws-accounts">AWS Accounts</h2><a class="sl-anchor-link" href="#aws-accounts"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “AWS Accounts”</span></a></div>
+<p>The HEMA100 frontend services share two AWS accounts (one per landscape):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Account ID</th><th>Purpose</th><th>Services Deployed</th></tr></thead><tbody><tr><td><code dir="auto">214061306515</code></td><td><strong>Production</strong> landscape</td><td>MFEs (prod), Gateway (prod), CMS (prod), Gateway API (prod)</td></tr><tr><td><code dir="auto">213617179136</code></td><td><strong>Non-production</strong> landscape</td><td>MFEs (sandbox/test), Gateway (sandbox/beta), CMS (preprod/staging/sandbox), Gateway API (test)</td></tr></tbody></table>
+<p>All services deploy to <code dir="auto">eu-central-1</code> (Frankfurt), except WAF stacks which deploy to <code dir="auto">us-east-1</code> (required for CloudFront).</p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="environment-naming-model">Environment Naming Model</h2><a class="sl-anchor-link" href="#environment-naming-model"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Environment Naming Model”</span></a></div>
+<p>The <code dir="auto">@hema/common-types</code> library defines the environment model:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/developertrainings-golden-path-docs-experiment/_astro/ec.v4551.css"><script type="module" src="/developertrainings-golden-path-docs-experiment/_astro/ec.0vx5m.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="typescript"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">interface</span><span style="--0:#D6DEEB;--1:#403F53"> Environment {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">name</span><span style="--0:#7FDBCA;--1:#096E72">:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">string</span><span style="--0:#D6DEEB;--1:#403F53">;                    </span><span style="--0:#919F9F;--1:#5D6376">// e.g., "prod", "test1", "feature-cofi-123"</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">service</span><span style="--0:#7FDBCA;--1:#096E72">:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">string</span><span style="--0:#D6DEEB;--1:#403F53">;                 </span><span style="--0:#919F9F;--1:#5D6376">// e.g., "omni-web-content"</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">component</span><span style="--0:#7FDBCA;--1:#096E72">:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">string</span><span style="--0:#D6DEEB;--1:#403F53">;               </span><span style="--0:#919F9F;--1:#5D6376">// e.g., "frontend"</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">temporary</span><span style="--0:#7FDBCA;--1:#096E72">:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">boolean</span><span style="--0:#D6DEEB;--1:#403F53">;              </span><span style="--0:#919F9F;--1:#5D6376">// true for sandboxes (Butler)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">configurationName</span><span style="--0:#7FDBCA;--1:#096E72">:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">string</span><span style="--0:#D6DEEB;--1:#403F53">;       </span><span style="--0:#919F9F;--1:#5D6376">// "prod" | "int" | "test" (derived)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">surroundingLandscape</span><span style="--0:#7FDBCA;--1:#096E72">:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#FFCB8B;--1:#111111">Landscape</span><span style="--0:#D6DEEB;--1:#403F53">; </span><span style="--0:#919F9F;--1:#5D6376">// PROD | INT</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="interface Environment {  name: string;                    // e.g., &#x22;prod&#x22;, &#x22;test1&#x22;, &#x22;feature-cofi-123&#x22;  service: string;                 // e.g., &#x22;omni-web-content&#x22;  component: string;               // e.g., &#x22;frontend&#x22;  temporary: boolean;              // true for sandboxes (Butler)  configurationName: string;       // &#x22;prod&#x22; | &#x22;int&#x22; | &#x22;test&#x22; (derived)  surroundingLandscape: Landscape; // PROD | INT}"><div></div></button></div></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><code dir="auto">environmentName</code></th><th align="right"><code dir="auto">configurationName</code></th><th align="center"><code dir="auto">temporary</code></th><th>Landscape</th><th>Account</th></tr></thead><tbody><tr><td><code dir="auto">prod</code></td><td align="right"><code dir="auto">prod</code></td><td align="center"><code dir="auto">false</code></td><td>PROD</td><td>Production</td></tr><tr><td><code dir="auto">int</code></td><td align="right"><code dir="auto">int</code></td><td align="center"><code dir="auto">false</code></td><td>INT</td><td>Production</td></tr><tr><td><code dir="auto">beta</code></td><td align="right"><code dir="auto">prod</code> or <code dir="auto">int</code></td><td align="center"><code dir="auto">false</code></td><td>Depends on branch</td><td>Production</td></tr><tr><td><code dir="auto">test1</code>, <code dir="auto">test2</code>, etc.</td><td align="right"><code dir="auto">test</code></td><td align="center"><code dir="auto">false</code></td><td>INT</td><td>Non-production</td></tr><tr><td><code dir="auto">feature-*</code>, <code dir="auto">fix-*</code>, <code dir="auto">chore-*</code></td><td align="right"><code dir="auto">test</code></td><td align="center"><code dir="auto">true</code></td><td>INT</td><td>Non-production</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="per-service-environment-map">Per-Service Environment Map</h2><a class="sl-anchor-link" href="#per-service-environment-map"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Per-Service Environment Map”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="mfe-omni-web-content-frontend">MFE: omni-web-content-frontend</h3><a class="sl-anchor-link" href="#mfe-omni-web-content-frontend"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “MFE: omni-web-content-frontend”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Environment</th><th>Branch</th><th>Trigger</th><th>URL Pattern</th><th>AWS Account</th></tr></thead><tbody><tr><td><strong>Production</strong></td><td><code dir="auto">main</code></td><td>Push + manual approval</td><td><code dir="auto">www.hema.nl</code> / <code dir="auto">www.hema.com</code></td><td>Production</td></tr><tr><td><strong>Test</strong> (permanent)</td><td><code dir="auto">main</code></td><td>Push</td><td>Preview URLs from gateway</td><td>Non-production</td></tr><tr><td><strong>Sandbox</strong> (temporary)</td><td><code dir="auto">feature/*</code>, <code dir="auto">fix/*</code>, <code dir="auto">chore/*</code></td><td>Butler push</td><td><code dir="auto">frontend-&#x3C;branch>.omni-web-content.ui-test.hema.digital</code></td><td>Non-production</td></tr></tbody></table>
+<p><strong>Service identity</strong>: <code dir="auto">service=omni-web-content</code>, <code dir="auto">component=frontend</code></p>
+<p><strong>SSM parameter paths</strong>:</p>
+<ul>
+<li>Global: <code dir="auto">/hema/global/auth</code>, <code dir="auto">/hema/global/business-base-url</code>, <code dir="auto">/hema/global/gateway/account-id</code></li>
+<li>Service: <code dir="auto">/hema/omni-web-content/frontend/&#x3C;configName>/log-level</code></li>
+<li>Content-specific: <code dir="auto">/hema/omni-web-content-frontend/&#x3C;configName>/sanity/dataset</code>, <code dir="auto">/hema/omni-web-content-frontend/&#x3C;configName>/base-url</code></li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="mfe-omni-web-catalog-pdp">MFE: omni-web-catalog-pdp</h3><a class="sl-anchor-link" href="#mfe-omni-web-catalog-pdp"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “MFE: omni-web-catalog-pdp”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Environment</th><th>Branch</th><th>Trigger</th><th>URL Pattern</th><th>AWS Account</th></tr></thead><tbody><tr><td><strong>Production</strong></td><td><code dir="auto">main</code></td><td>Push + manual approval</td><td><code dir="auto">www.hema.nl/*.html</code> / <code dir="auto">www.hema.com/&#x3C;locale>/*.html</code></td><td>Production</td></tr><tr><td><strong>Test</strong> (permanent)</td><td><code dir="auto">main</code></td><td>Push</td><td>Preview URLs from gateway</td><td>Non-production</td></tr><tr><td><strong>Sandbox</strong> (temporary)</td><td><code dir="auto">feature/*</code>, <code dir="auto">fix/*</code>, <code dir="auto">chore/*</code></td><td>Butler push</td><td><code dir="auto">frontend-&#x3C;branch>.omni-web-catalog.ui-test.hema.digital</code></td><td>Non-production</td></tr></tbody></table>
+<p><strong>Service identity</strong>: <code dir="auto">service=omni-web-catalog</code>, <code dir="auto">component=pdp</code></p>
+<p><strong>SSM parameter paths</strong>:</p>
+<ul>
+<li>Global: <code dir="auto">/hema/global/auth</code>, <code dir="auto">/hema/global/business-base-url</code>, <code dir="auto">/hema/global/allowed-origins</code></li>
+<li>Component: <code dir="auto">/hema/pdp/sanity/recommender-id</code>, <code dir="auto">/hema/pdp/gtm-id</code>, <code dir="auto">/hema/pdp/microcopy-cache-ttl</code></li>
+</ul>
+<p><strong>Secrets</strong>: <code dir="auto">/hema/global/auth</code> (Kong OAuth), <code dir="auto">/hema/pdp/sanity</code> (Sanity tokens)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="cms-omni-cms-composable-cms">CMS: omni-cms-composable-cms</h3><a class="sl-anchor-link" href="#cms-omni-cms-composable-cms"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “CMS: omni-cms-composable-cms”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Environment</th><th>Branch</th><th>Trigger</th><th>Studio URL</th><th>Dataset</th><th>AWS Account</th></tr></thead><tbody><tr><td><strong>Production</strong></td><td><code dir="auto">main</code></td><td>Push</td><td><code dir="auto">hema-cms.sanity.studio</code></td><td><code dir="auto">production</code></td><td>Production</td></tr><tr><td><strong>Pre-production</strong></td><td><code dir="auto">main</code></td><td>Push</td><td><code dir="auto">preprod-hema-cms.sanity.studio</code></td><td><code dir="auto">preprod</code></td><td>Non-production</td></tr><tr><td><strong>Staging</strong></td><td><code dir="auto">main</code></td><td>Git tag</td><td><code dir="auto">staging-hema-cms.sanity.studio</code></td><td><code dir="auto">staging</code></td><td>Non-production</td></tr><tr><td><strong>Sandbox</strong></td><td><code dir="auto">feature/*</code>, <code dir="auto">fix/*</code>, <code dir="auto">chore/*</code></td><td>Push</td><td><code dir="auto">&#x3C;branch>-sandbox-hema-cms.sanity.studio</code></td><td><code dir="auto">&#x3C;branch>_sandbox</code></td><td>Non-production</td></tr></tbody></table>
+<p><strong>Service identity</strong>: <code dir="auto">service=omni-cms</code>, <code dir="auto">component=cms</code></p>
+<p><strong>Secrets</strong>: <code dir="auto">&#x3C;stage>/cms-env-vars</code> (all CMS environment variables bundled in one secret)</p>
+<p><strong>Special behaviors</strong>:</p>
+<ul>
+<li>Sandbox creates a new Sanity dataset automatically (<code dir="auto">infrastructure/lib/scripts/create-sandbox.ts</code>)</li>
+<li>Pre-production pipeline has a branch-deletion webhook (auto-cleanup)</li>
+<li>Staging pipeline is tag-triggered (not push-triggered)</li>
+<li>Production has <code dir="auto">terminationProtection: true</code></li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="gateway-omni-web-gateway">Gateway: omni-web-gateway</h3><a class="sl-anchor-link" href="#gateway-omni-web-gateway"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Gateway: omni-web-gateway”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Environment</th><th>Branch</th><th>Trigger</th><th>Domains</th><th>AWS Account</th></tr></thead><tbody><tr><td><strong>Production</strong></td><td><code dir="auto">main</code></td><td>Push + manual approval</td><td><code dir="auto">www.hema.nl</code>, <code dir="auto">www.hema.com</code></td><td>Production</td></tr><tr><td><strong>Integration</strong></td><td><code dir="auto">integration</code></td><td>Push</td><td>Internal preview domains</td><td>Production</td></tr><tr><td><strong>Beta</strong></td><td><code dir="auto">beta/*</code></td><td>Push</td><td>Preview domains (prod or int landscape)</td><td>Production</td></tr><tr><td><strong>Test</strong> (permanent)</td><td><code dir="auto">main</code></td><td>Push</td><td><code dir="auto">*.omni-web-gateway.experience-dev.hema.digital</code></td><td>Non-production</td></tr><tr><td><strong>Sandbox</strong> (temporary)</td><td><code dir="auto">feature/*</code></td><td>Butler push</td><td>Temporary preview domains</td><td>Non-production</td></tr></tbody></table>
+<p><strong>Service identity</strong>: <code dir="auto">service=omni-web-gateway</code>, <code dir="auto">component=router</code></p>
+<p><strong>Special behaviors</strong>:</p>
+<ul>
+<li>Beta environment can target either PROD or INT landscape depending on branch</li>
+<li>WAF stack only deployed for prod, int, and beta environments</li>
+<li>Monitoring stack skipped for temporary environments</li>
+<li>CloudFront distributions per domain (NL, COM)</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="gateway-api-omni-web-gateway-api">Gateway API: omni-web-gateway-api</h3><a class="sl-anchor-link" href="#gateway-api-omni-web-gateway-api"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Gateway API: omni-web-gateway-api”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Environment</th><th>Branch</th><th>Trigger</th><th>AWS Account</th></tr></thead><tbody><tr><td><strong>Production</strong></td><td><code dir="auto">main</code></td><td>Push + approval</td><td>Production</td></tr><tr><td><strong>Test</strong> (permanent)</td><td><code dir="auto">main</code></td><td>Push</td><td>Non-production</td></tr><tr><td><strong>Sandbox</strong> (temporary)</td><td><code dir="auto">feature/*</code></td><td>Butler push</td><td>Non-production</td></tr></tbody></table>
+<p><strong>Service identity</strong>: <code dir="auto">service=omni-web-gateway</code>, <code dir="auto">component=api</code></p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="libraries-omni-web-app-shell-library-hema-design-system">Libraries (omni-web-app-shell-library, hema-design-system)</h3><a class="sl-anchor-link" href="#libraries-omni-web-app-shell-library-hema-design-system"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Libraries (omni-web-app-shell-library, hema-design-system)”</span></a></div>
+<p>Libraries don’t have runtime environments. They are published to <strong>CodeArtifact</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Library</th><th>Registry</th><th>Scope</th><th>Versioning</th></tr></thead><tbody><tr><td>Web Shell packages</td><td>CodeArtifact (<code dir="auto">hema-prod</code>)</td><td><code dir="auto">@hema/omni-web-app-shell-*</code></td><td>Semantic (3.x)</td></tr><tr><td>HDS packages</td><td>CodeArtifact (<code dir="auto">hema-prod</code>)</td><td><code dir="auto">@hema/hds-*</code></td><td>RC versions (2.1.0-rc.*)</td></tr></tbody></table>
+<p>Published on merge to <code dir="auto">main</code>. Consumed by MFEs via <code dir="auto">npm install</code> after <code dir="auto">co:login</code>.</p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="environment-flow-developer-journey">Environment Flow (Developer Journey)</h2><a class="sl-anchor-link" href="#environment-flow-developer-journey"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Environment Flow (Developer Journey)”</span></a></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Developer machine (local)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│ git push feature/cofi-123</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Butler Sandbox (temporary, non-prod account)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Auto-created on push</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Auto-deleted on branch merge/delete</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - URL: frontend-&#x3C;branch>.&#x3C;service>.ui-test.hema.digital</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│ PR merged to main</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Test Environment (permanent, non-prod account)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Auto-deployed on push to main</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Preview URLs from gateway registration</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Playwright E2E runs here</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│ (automatic for MFEs, manual approval for gateway)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Production (prod account)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Manual approval step in pipeline</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Deployed to www.hema.nl / www.hema.com</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - WAF + monitoring active</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - terminationProtection: true</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Live traffic</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Developer machine (local)    │    │ git push feature/cofi-123    ▼Butler Sandbox (temporary, non-prod account)    │  - Auto-created on push    │  - Auto-deleted on branch merge/delete    │  - URL: frontend-<branch>.<service>.ui-test.hema.digital    │    │ PR merged to main    ▼Test Environment (permanent, non-prod account)    │  - Auto-deployed on push to main    │  - Preview URLs from gateway registration    │  - Playwright E2E runs here    │    │ (automatic for MFEs, manual approval for gateway)    ▼Production (prod account)    │  - Manual approval step in pipeline    │  - Deployed to www.hema.nl / www.hema.com    │  - WAF + monitoring active    │  - terminationProtection: true    ▼Live traffic"><div></div></button></div></figure></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="cms-specific-flow">CMS-specific flow:</h3><a class="sl-anchor-link" href="#cms-specific-flow"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “CMS-specific flow:”</span></a></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Developer machine (local)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│ git push feature/cofi-123</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Sandbox (non-prod account)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - New Sanity dataset created: &#x3C;branch>_sandbox</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Studio deployed: &#x3C;branch>-sandbox-hema-cms.sanity.studio</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - CORS origin added</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Manual approval to delete all resources</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│ PR merged to main</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Pre-production (non-prod account)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Dataset: preprod</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Migrations run automatically</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Documents validated</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│ (automatic)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Production (prod account)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Dataset: production</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Migrations run automatically</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - Documents validated</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">│  - terminationProtection: true</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">    </span></span><span style="--0:#d6deeb;--1:#403f53">▼</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Live content</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Developer machine (local)    │    │ git push feature/cofi-123    ▼Sandbox (non-prod account)    │  - New Sanity dataset created: <branch>_sandbox    │  - Studio deployed: <branch>-sandbox-hema-cms.sanity.studio    │  - CORS origin added    │  - Manual approval to delete all resources    │    │ PR merged to main    ▼Pre-production (non-prod account)    │  - Dataset: preprod    │  - Migrations run automatically    │  - Documents validated    │    │ (automatic)    ▼Production (prod account)    │  - Dataset: production    │  - Migrations run automatically    │  - Documents validated    │  - terminationProtection: true    ▼Live content"><div></div></button></div></figure></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="ssm-parameter-namespace-convention">SSM Parameter Namespace Convention</h2><a class="sl-anchor-link" href="#ssm-parameter-namespace-convention"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “SSM Parameter Namespace Convention”</span></a></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">/hema/</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">├── global/                              # Shared across all services</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── auth                             # (Secret) Kong OAuth credentials</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── business-base-url                # Internal API base URL</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── business-commerce-base-url       # Commerce API base URL</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── gateway/account-id               # Gateway AWS account ID</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── allowed-origins                  # CORS allowed origins</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   └── basic-auth                       # (Secret) Basic auth for preview</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">├── omni-web-content-frontend/           # Content MFE specific</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── sanity/project-id                # Sanity project ID (shared across stages)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── sanity/api-version               # Sanity API version</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── sanity                           # (Secret) Sanity tokens</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── &#x3C;configName>/                    # Per-environment config</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   │   ├── sanity/dataset               # "production" | "preprod" | ...</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   │   ├── sanity/studio-url            # Studio URL for visual editing</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   │   ├── base-url                     # Public domain (hema.nl / hema.com)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   │   ├── pods-url-path                # PODS API path</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   │   └── retail-media-test-mode       # Feature flag</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   └── &#x3C;configName>/log-level           # Log level per env</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">├── omni-web-content/frontend/           # Service/component path</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   └── &#x3C;configName>/log-level</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">├── pdp/                                 # PDP component specific</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── sanity                           # (Secret) Sanity tokens</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── sanity/recommender-id            # Sanity recommender ID</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── gtm-id                           # GTM container ID</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── microcopy-cache-ttl              # Cache TTL (seconds)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   ├── headgroup-config-cache-ttl       # Cache TTL (seconds)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│   └── sfcc-storefront-url              # SFCC URL for search proxy</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">│</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">└── router/waf/&#x3C;project>/arn             # WAF ARN (gateway)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="/hema/├── global/                              # Shared across all services│   ├── auth                             # (Secret) Kong OAuth credentials│   ├── business-base-url                # Internal API base URL│   ├── business-commerce-base-url       # Commerce API base URL│   ├── gateway/account-id               # Gateway AWS account ID│   ├── allowed-origins                  # CORS allowed origins│   └── basic-auth                       # (Secret) Basic auth for preview│├── omni-web-content-frontend/           # Content MFE specific│   ├── sanity/project-id                # Sanity project ID (shared across stages)│   ├── sanity/api-version               # Sanity API version│   ├── sanity                           # (Secret) Sanity tokens│   ├── <configName>/                    # Per-environment config│   │   ├── sanity/dataset               # &#x22;production&#x22; | &#x22;preprod&#x22; | ...│   │   ├── sanity/studio-url            # Studio URL for visual editing│   │   ├── base-url                     # Public domain (hema.nl / hema.com)│   │   ├── pods-url-path                # PODS API path│   │   └── retail-media-test-mode       # Feature flag│   └── <configName>/log-level           # Log level per env│├── omni-web-content/frontend/           # Service/component path│   └── <configName>/log-level│├── pdp/                                 # PDP component specific│   ├── sanity                           # (Secret) Sanity tokens│   ├── sanity/recommender-id            # Sanity recommender ID│   ├── gtm-id                           # GTM container ID│   ├── microcopy-cache-ttl              # Cache TTL (seconds)│   ├── headgroup-config-cache-ttl       # Cache TTL (seconds)│   └── sfcc-storefront-url              # SFCC URL for search proxy│└── router/waf/<project>/arn             # WAF ARN (gateway)"><div></div></button></div></figure></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="secrets-manager-convention">Secrets Manager Convention</h2><a class="sl-anchor-link" href="#secrets-manager-convention"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Secrets Manager Convention”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Secret Path</th><th>Service</th><th>Contents</th></tr></thead><tbody><tr><td><code dir="auto">/hema/global/auth</code></td><td>All</td><td><code dir="auto">{ clientId, clientSecret }</code> — Kong OAuth</td></tr><tr><td><code dir="auto">/hema/global/basic-auth</code></td><td>Gateway/E2E</td><td><code dir="auto">{ username, password }</code> — Preview basic auth</td></tr><tr><td><code dir="auto">/hema/omni-web-content-frontend/sanity</code></td><td>Content MFE</td><td><code dir="auto">{ apiReadToken }</code></td></tr><tr><td><code dir="auto">/hema/pdp/sanity</code></td><td>PDP MFE</td><td><code dir="auto">{ projectId, dataset, apiReadToken }</code></td></tr><tr><td><code dir="auto">&#x3C;stage>/cms-env-vars</code></td><td>CMS</td><td>All CMS env vars bundled</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="cdk-stack-naming-convention">CDK Stack Naming Convention</h2><a class="sl-anchor-link" href="#cdk-stack-naming-convention"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “CDK Stack Naming Convention”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Pattern</th><th>Example</th><th>Purpose</th></tr></thead><tbody><tr><td><code dir="auto">&#x3C;project>-ci</code></td><td><code dir="auto">content-main-ci</code></td><td>Pipeline stack</td></tr><tr><td><code dir="auto">&#x3C;project>-rt</code></td><td><code dir="auto">content-main-rt</code></td><td>Runtime stack (ECS, ALB, gateway reg)</td></tr><tr><td><code dir="auto">&#x3C;project>-monitoring</code></td><td><code dir="auto">omni-web-gateway-prod-monitoring</code></td><td>Monitoring stack</td></tr><tr><td><code dir="auto">&#x3C;project>-waf</code></td><td><code dir="auto">omni-web-gateway-prod-waf</code></td><td>WAF stack (us-east-1)</td></tr></tbody></table>
+<p>For Butler sandboxes: <code dir="auto">&#x3C;service>-&#x3C;branch>-ci</code>, <code dir="auto">&#x3C;service>-&#x3C;branch>-rt</code></p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="cdk-tags-applied-to-all-stacks">CDK Tags (Applied to All Stacks)</h2><a class="sl-anchor-link" href="#cdk-tags-applied-to-all-stacks"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “CDK Tags (Applied to All Stacks)”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Tag</th><th>Value</th><th>Purpose</th></tr></thead><tbody><tr><td><code dir="auto">stage</code></td><td><code dir="auto">configurationName</code> (prod/int/test)</td><td>Environment identification</td></tr><tr><td><code dir="auto">service</code></td><td>Service ID</td><td>Cost allocation</td></tr><tr><td><code dir="auto">component</code></td><td>Component name</td><td>Service catalog mapping</td></tr><tr><td><code dir="auto">butlerStackTag</code></td><td>Butler tag or “none”</td><td>Stack lifecycle management</td></tr><tr><td><code dir="auto">team</code></td><td>Team name (e.g., “CoFi”)</td><td>Ownership (CMS only)</td></tr></tbody></table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="key-differences-between-environments">Key Differences Between Environments</h2><a class="sl-anchor-link" href="#key-differences-between-environments"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Key Differences Between Environments”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Aspect</th><th align="right">Sandbox (temporary)</th><th align="center">Test (permanent)</th><th align="center">Production</th></tr></thead><tbody><tr><td>Manual approval</td><td align="right">No</td><td align="center">No</td><td align="center">Yes</td></tr><tr><td>AlertPublisher</td><td align="right">No</td><td align="center">Yes</td><td align="center">Yes</td></tr><tr><td>WAF</td><td align="right">No</td><td align="center">No (gateway only)</td><td align="center">Yes</td></tr><tr><td>Monitoring stack</td><td align="right">No</td><td align="center">Yes</td><td align="center">Yes</td></tr><tr><td>terminationProtection</td><td align="right">No</td><td align="center">No</td><td align="center">Yes</td></tr><tr><td>Spot instances</td><td align="right">Yes (<code dir="auto">enableSpot</code>)</td><td align="center">No</td><td align="center">No</td></tr><tr><td>Auto-cleanup</td><td align="right">Yes (branch delete)</td><td align="center">No</td><td align="center">No</td></tr><tr><td>Playwright E2E</td><td align="right">No</td><td align="center">Yes (post-deploy)</td><td align="center">No</td></tr><tr><td>CDK garbage collection</td><td align="right">No</td><td align="center">Yes</td><td align="center">Yes</td></tr></tbody></table> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr"> <a href="/developertrainings-golden-path-docs-experiment/golden-path/data-apis/session-sharing/" rel="prev" class="astro-u2l5gyhi"> <svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg> <span class="astro-u2l5gyhi"> Previous <br class="astro-u2l5gyhi"> <span class="link-title astro-u2l5gyhi">Session Sharing — SFCC &amp; Next.js Coexistence</span> </span> </a> <a href="/developertrainings-golden-path-docs-experiment/golden-path/performance/caching-cdn/" rel="next" class="astro-u2l5gyhi"> <svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg> <span class="astro-u2l5gyhi"> Next <br class="astro-u2l5gyhi"> <span class="link-title astro-u2l5gyhi">Performance — Caching, CDN &amp; Core Web Vitals</span> </span> </a> </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
